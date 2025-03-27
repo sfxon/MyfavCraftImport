@@ -1,0 +1,36 @@
+{% block myfav_craft_import_dashboard %}
+    <sw-page class="myfav-craft-import-dashboard">
+        <template #content>
+            <sw-card class="myfav-craft-import-main-card" positionIdentifier="dashboardIdentifier">
+                <div class="sw-data-grid">
+                    <div class="sw-data-grid__wrapper">
+                        <table class="sw-data-grid__table myfav-craft-import-dashboard-overview-table">
+                            <tbody class="sw-data-grid__body">
+                                <tr class="sw-data-grid__row">
+                                    <th class="sw-data-grid__cell sw-data-grid__cell--name sw-data-grid__cell--align-left">
+                                        <div class="sw-data-grid__cell-content">{{ $t('myfav-craft-import.dashboard.tableHeadingLastSynchronization') }}</div>
+                                    </th>
+                                    <td class="sw-data-grid__cell sw-data-grid__cell--name sw-data-grid__cell--align-left">
+                                        <div class="sw-data-grid__cell-content">xxxx</div>
+                                    </td>
+                                </tr>
+                                <tr class="sw-data-grid__row">
+                                    <th class="sw-data-grid__cell sw-data-grid__cell--name sw-data-grid__cell--align-left">
+                                        <div class="sw-data-grid__cell-content">{{ $t('myfav-craft-import.dashboard.tableHeadingActiveProductsInShop') }}</div>
+                                    </th>
+                                    <td class="sw-data-grid__cell sw-data-grid__cell--name sw-data-grid__cell--align-left">
+                                        <div class="sw-data-grid__cell-content">
+                                            xxxx
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <sw-button :routerLink="{ name: 'myfav.craft.import.article' }">{{ $t('myfav-craft-import.dashboard.buttonAddProducts') }}</sw-button>
+            </sw-card>
+        </template>
+    </sw-page>
+{% endblock %}

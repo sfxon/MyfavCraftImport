@@ -1,0 +1,20 @@
+{
+    "myfav-craft-import": {
+        "article": {
+            "btnSave": "Save",
+            "infoStartNewSearch": "Start by searching for an article-number.",
+            "inputTextArticleNumber": "Article-Number",
+            "btnSearchForArticle": "Search",
+            "pageTitle": "Product"
+        },
+        "dashboard": {
+            "buttonAddProducts": "Add products",
+            "pageTitle": "Craft-Import",
+            "tableHeadingActiveProductsInShop": "Active products in shop:",
+            "tableHeadingLastSynchronization": "Letzte Synchronisierung:"
+        },
+        "general": {
+            "mainMenuItemGeneral": "Craft-Import"
+        }
+    }
+}

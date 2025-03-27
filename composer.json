@@ -1,0 +1,35 @@
+{
+    "name": "myfav/craft-import",
+    "version": "1.0.0",
+    "description": "Importer, to handle imports from the CRAFT API. Craft is a sportswear manufacturer.",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steve Krämer, Mindfav Software",
+            "homepage": "https://www.mindfav.com"
+        }
+    ],
+    "require": {
+        "shopware/core": "~6.5",
+        "shopware/administration": "~6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Myfav\\CraftImport\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Myfav\\CraftImport\\MyfavCraftImport",
+        "plugin-icon": "plugin.png",
+        "copyright": "(c) by Mindfav",
+        "label": {
+            "en-GB": "Craft Importer",
+            "de-DE": "Craft Importer"
+        },
+        "description": {
+            "en-GB": "Importer, to handle imports from the CRAFT API. Craft is a sportswear manufacturer. The manufacturer of the plugin is not connected to Craft.",
+            "de-DE": "Importer, der Importe über die CRAFT-API erlaubt. Craft ist ein Hersteller von Sportbekleidung. Der Hersteller des Plugins hat keine Verbindung zu Craft."
+        }
+    }
+}

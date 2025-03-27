@@ -1,0 +1,42 @@
+{% block myfav_craft_import_article %}
+    <sw-page class="myfav-craft-import-article">
+        <template #content>
+            <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchCard">
+                <div class="myfav-craft-import-search-container">
+                    <div class="col-article-number">
+                        <sw-text-field
+                            :disabled="searchDisabled"
+                            :label="$t('myfav-craft-import.article.inputTextArticleNumber')"
+                            :placeholder="$t('myfav-craft-import.article.inputTextArticleNumber')"
+                            v-model="articleNumber"
+                        />
+                    </div>
+                    <div class="col-search">
+                        <sw-button
+                            @click="searchForArticleNumber"
+                            :disabled="searchDisabled"
+                            size="large"
+                            variant="primary"
+                        >
+                            {{ $t('myfav-craft-import.article.btnSearchForArticle') }}
+                        </sw-button>
+                    </div>
+                </div>
+            </sw-card>
+
+            <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchResult">
+                <div class="myfav-craft-import-search-container">
+                    {{ $t('myfav-craft-import.article.infoStartNewSearch') }}
+                </div>
+            </sw-card>
+
+            <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSaveButton">
+                <sw-button
+                    variant="primary"
+                >
+                    {{ $t('myfav-craft-import.article.btnSave') }}
+                </sw-button>
+            </sw-card>
+        </template>
+    </sw-page>
+{% endblock %}
