@@ -3,17 +3,18 @@
         <template #content>
             <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchCard">
                 <div class="myfav-craft-import-search-container">
-                    <div class="col-article-number">
+                    <div class="col-search-term">
                         <sw-text-field
                             :disabled="searchDisabled"
-                            :label="$t('myfav-craft-import.article.inputTextArticleNumber')"
-                            :placeholder="$t('myfav-craft-import.article.inputTextArticleNumber')"
-                            v-model="articleNumber"
+                            :label="$t('myfav-craft-import.article.inputTextSearchTerm')"
+                            @keydown.enter="searchForSearchTerm"
+                            :placeholder="$t('myfav-craft-import.article.inputTextSearchTerm')"
+                            v-model="searchTerm"
                         />
                     </div>
                     <div class="col-search">
                         <sw-button
-                            @click="searchForArticleNumber"
+                            @click="searchForSearchTerm"
                             :disabled="searchDisabled"
                             size="large"
                             variant="primary"
@@ -25,18 +26,112 @@
             </sw-card>
 
             <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchResult">
-                <div class="myfav-craft-import-search-container">
-                    {{ $t('myfav-craft-import.article.infoStartNewSearch') }}
+                <div class="myfav-craft-import-search-result-container">
+                    <div v-if="searchResultObject == null" class="myfav-craft-import-search-container-no-results">
+                        {{ $t('myfav-craft-import.article.infoStartNewSearch') }}
+                    </div>
+                    <div v-else class="myfav-craft-import-search-container-results">
+                        <h1>Suchergebnis</h1>
+                        <table class="myfav-craft-search-result" v-if="searchResultObject?.data?.productSearch?.result">
+                            <tr 
+                                class="entry"
+                                @click="onShowArticleDetailModal(item)"
+                                v-for="item in searchResultObject.data.productSearch.result"
+                            >
+                                <td>
+                                    <img :src="item.pictures[0].imageUrl" class="img-responsive myfav-craft-search-result-image" />
+                                </td>
+                                <td>
+                                    {{ item.productNumber }}
+                                </td>
+                                <td>
+                                    {{ item.productName }}
+                                    <span v-if="item.variations.length > 0" class="myfav-craft-import-variation-count">
+                                        {{ item.variations.length }}
+                                        <span v-if="item.variations.length == 1">Variante</span>
+                                        <span v-else>Varianten</span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </sw-card>
 
-            <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSaveButton">
-                <sw-button
-                    variant="primary"
-                >
-                    {{ $t('myfav-craft-import.article.btnSave') }}
-                </sw-button>
+            <sw-card class="myfav-craft-import-debug" positionIdentifier="myfavCraftImportDebug" v-if="debugMode == true">
+                <b>Debug-Ausgabe:</b><br />
+                <pre v-html="getSearchResultAsString()"></pre>
             </sw-card>
+
+            <sw-modal 
+                class="gigx-return-management-generate-labels-modal"
+                selector="body"
+                v-if="showArticleDetailModal"
+                @modal-close="onCloseArticleDetailModal"
+                title="Artikel bearbeiten"
+            size="1600px">
+                <template #modal-title>
+                    <div style="display: flex; align-items: center;">
+                        <h4 id="modalTitleEl" class="sw-modal__title">Artikel bearbeiten</h4>
+                    </div>
+                </template>
+
+                <div class="myfav-craft-import-article-selector">
+                    <sw-switch-field
+                        label="Datenübernahme für diesen Artikel aktivieren"
+                        :value="shopwareProductSettings.updateProductFromCraftApi"
+                    ></sw-switch-field>
+
+                    <table class="myfav-craft-import-article-selector-table">
+                        <thead>
+                            <tr>
+                                <th>Überschreiben</th>
+                                <th>Eigenschaft</th>
+                                <th>Neuer Wert</th>
+                                <th>Übergeben von Craft</th>
+                            </tr>
+                        </thead>
+
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductName"
+                                    @change="shopwareProductSettings.updateProductName = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Artikelname</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-text-field
+                                    :disabled="!shopwareProductSettings.updateProductName"
+                                    v-model="shopwareProductSettings.customProductName"
+                                ></sw-text-field>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                {{ selectedSearchResult.productName }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <template #modal-footer>
+                    <sw-button
+                        @click="onCloseArticleDetailModal"
+                        size="large">
+                        Abbrechen
+                    </sw-button>
+
+                    <sw-button
+                        size="large">
+                        Speichern
+                    </sw-button>
+
+                    <sw-button
+                        size="large"
+                        variant="primary">
+                        Speichern &amp; Synchronisieren
+                    </sw-button>
+                </template>
+            </sw-modal>
         </template>
     </sw-page>
 {% endblock %}

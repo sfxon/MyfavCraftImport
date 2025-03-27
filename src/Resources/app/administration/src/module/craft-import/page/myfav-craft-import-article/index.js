@@ -21,15 +21,38 @@ Component.register('myfav-craft-import-article', {
 
     data() {
         return {
-            articleNumber: "",
+            searchTerm: "",
             craftProductSearchApiService: null,
+            debugMode: false,
             pluginConfig: null,
-            searchDisabled: false
+            showArticleDetailModal: false,
+            searchDisabled: false,
+            searchResultJson: null,
+            searchResultObject: null,
+            selectedSearchResult: null,
+            shopwareProductSettings: {
+                updateProductFromCraftApi: true,
+                updateProductName: false,
+                customProductName: "test"
+            }
         }
     },
 
     methods: {
-        async searchForArticleNumber() {
+        getSearchResultAsString() {
+            return this.searchResultJson // Reformat the json.
+        },
+
+        onCloseArticleDetailModal() {
+            this.showArticleDetailModal = false;
+        },
+
+        onShowArticleDetailModal(item) {
+            this.selectedSearchResult = item;
+            this.showArticleDetailModal = true;
+        },
+
+        async searchForSearchTerm() {
             // Eingabefelder während des Ladevorgangs deaktivieren.
             this.searchDisabled = true;
 
@@ -46,11 +69,12 @@ Component.register('myfav-craft-import-article', {
 
             const [pluginConfig, searchResult] = await Promise.all([
                 this.systemConfigApiService.getValues('MyfavCraftImport.config'),
-                this.craftProductSearchApiService.search(this.articleNumber)
+                this.craftProductSearchApiService.search(this.searchTerm)
             ]);
 
-            console.log('pluginConfig: ', pluginConfig['MyfavCraftImport.config.debugMode']);
-            console.log('searchResult: ', JSON.parse(searchResult.data.data));
+            this.debugMode = pluginConfig['MyfavCraftImport.config.debugMode'];
+            this.searchResultObject = JSON.parse(searchResult.data.data);
+            this.searchResultJson = JSON.stringify(this.searchResultObject , null, 2);
 
             // Eingabefelder nach dem Ladevorgang wieder aktivieren.
             this.searchDisabled = false;

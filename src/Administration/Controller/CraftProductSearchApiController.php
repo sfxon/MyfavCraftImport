@@ -30,8 +30,8 @@ class CraftProductSearchApiController extends AbstractController
     {
     }
 
-    #[Route(path: '/api/myfav/craft/product/search/{productNumber}', name: 'api.action.myfav.craft.product.search', methods: ['GET'])]
-    public function getState(string $productNumber, Context $context, Request $request): JsonResponse
+    #[Route(path: '/api/myfav/craft/product/search/{searchTerm}', name: 'api.action.myfav.craft.product.search', methods: ['GET'])]
+    public function getState(string $searchTerm, Context $context, Request $request): JsonResponse
     {
         $pluginConfig = $this->systemConfigService->get('MyfavCraftImport.config');
 
@@ -53,7 +53,7 @@ class CraftProductSearchApiController extends AbstractController
                     'Content-Type' => 'application/json'
                 ],
                 'json' => [
-                    'query' => $this->getGraphqlSearchDefinition($productNumber, 1)
+                    'query' => $this->getGraphqlSearchDefinition($searchTerm, 1)
                 ]
             ]);
             $statusCode = $response->getStatusCode();

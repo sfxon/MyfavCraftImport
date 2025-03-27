@@ -2,8 +2,9 @@
     "myfav-craft-import": {
         "article": {
             "btnSave": "Save",
+            "buttonSelect": "Auswählen",
             "infoStartNewSearch": "Start by searching for an article-number.",
-            "inputTextArticleNumber": "Article-Number",
+            "inputTextSearchTerm": "Search by Article-Number or Name",
             "btnSearchForArticle": "Search",
             "pageTitle": "Product"
         },

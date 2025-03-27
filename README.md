@@ -1,6 +1,12 @@
 # MyfavCraftImport
 
-Shopware 6 Importer for the CRAFT Sportswear API. Imports products from the API to your shopware 6 store. 
+Projekt-Status: **In development**
+
+This project is still in development. Some features are working, while others are not finished or have to be added.
+
+---
+
+Shopware 6 Importer for the CRAFT Sportswear API. Imports products from the API to your shopware 6 store.
 
 
 ## Information about Craft / Disclaimer

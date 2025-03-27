@@ -10,8 +10,8 @@ export default class CraftProductSearchApiService extends ApiService {
     /**
      * Fetch the orderDeliveryInternalState for the order given by orderId.
      */
-    search(productNumber) {
-        const route = `/myfav/craft/product/search/${productNumber}`;
+    search(searchTerm) {
+        const route = `/myfav/craft/product/search/${searchTerm}`;
 
         return this.httpClient.get(route, {
             headers: this.getBasicHeaders(),
