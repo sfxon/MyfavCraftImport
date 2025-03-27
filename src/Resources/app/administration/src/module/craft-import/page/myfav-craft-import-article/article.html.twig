@@ -85,13 +85,34 @@
                     <table class="myfav-craft-import-article-selector-table">
                         <thead>
                             <tr>
-                                <th>Überschreiben</th>
+                                <th class="myfav-craft-import-article-col-override-title"><span class="myfav-cut-title" title="Überschreiben">Überschreiben</span></th>
                                 <th>Eigenschaft</th>
                                 <th>Neuer Wert</th>
                                 <th>Übergeben von Craft</th>
                             </tr>
                         </thead>
 
+                        {# Artikelnummer #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductNumber"
+                                    @change="shopwareProductSettings.updateProductNumber = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Artikel-Nr.</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-text-field
+                                    :disabled="!shopwareProductSettings.updateProductNumber"
+                                    v-model="shopwareProductSettings.customProductNumber"
+                                ></sw-text-field>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                {{ selectedSearchResult.productNumber }}
+                            </td>
+                        </tr>
+
+                        {# Artikelname #}
                         <tr>
                             <td class="myfav-craft-import-article-col-override">
                                 <sw-switch-field
@@ -108,6 +129,27 @@
                             </td>
                             <td class="myfav-craft-import-article-col-original-value">
                                 {{ selectedSearchResult.productName }}
+                            </td>
+                        </tr>
+
+                        {# Artikel-Beschreibung #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductDescription"
+                                    @change="shopwareProductSettings.updateProductDescription = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Beschreibung</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-textarea-field
+                                    :disabled="!shopwareProductSettings.updateProductDescription"
+                                    :multiline="true"
+                                    v-model="shopwareProductSettings.customProductDescription"
+                                ></sw-textarea-field>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                {{ selectedSearchResult.productText }}
                             </td>
                         </tr>
                     </table>

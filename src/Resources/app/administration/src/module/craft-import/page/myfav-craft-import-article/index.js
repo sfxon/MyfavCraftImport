@@ -31,9 +31,13 @@ Component.register('myfav-craft-import-article', {
             searchResultObject: null,
             selectedSearchResult: null,
             shopwareProductSettings: {
+                customProductDescription: "",
+                customProductName: "",
+                customProductNumber: "",
+                updateProductDescription: false,
                 updateProductFromCraftApi: true,
                 updateProductName: false,
-                customProductName: "test"
+                updateProductNumber: false,
             }
         }
     },

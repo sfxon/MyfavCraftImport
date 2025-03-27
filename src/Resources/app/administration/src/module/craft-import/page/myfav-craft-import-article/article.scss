@@ -87,14 +87,31 @@
         text-align: left;
     }
 
-    .myfav-craft-import-article-col-fieldname,
-    .myfav-craft-import-article-col-original-value {
-        width: 30%;
+    .myfav-craft-import-article-col-override-title {
+        .myfav-cut-title {
+            display: inline-block;
+            max-width: 4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
-    .sw-field--switch {
-        margin-top: 12px;
-        margin-bottom: auto;
+    .myfav-craft-import-article-col-override {
+        overflow: hidden;
+        text-align: center;
+        width: 6%;
+
+        .sw-field--switch {
+            display: inline-block;
+            margin: 12px auto auto!important;
+            width: auto;
+        }
+    }
+
+    .myfav-craft-import-article-col-custom-value,
+    .myfav-craft-import-article-col-original-value {
+        width: 40%;
     }
 
     .sw-field {
