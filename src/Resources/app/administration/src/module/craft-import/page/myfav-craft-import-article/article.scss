@@ -147,3 +147,34 @@
         margin: 0;
     }
 }
+
+.myfav-craft-variation-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.myfav-craft-variation {
+    background-color: #f0f2f5;
+    margin-top: 12px;
+    padding: 5px 10px;
+
+    .myfav-craft-variation-skus {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;
+
+        .myfav-craft-variation-sku {
+            background-color: #FFF;
+            border: 1px solid #CCC;
+            cursor: pointer;
+            flex: 0 1 calc(25% - 10px); /* 25% der Breite minus Abstand */
+            padding: 5px 10px;
+            width: 25%;
+        }
+
+        .myfav-craft-variation-sku:hover {
+            background-color: #e3f3ff;
+        }
+    }
+}

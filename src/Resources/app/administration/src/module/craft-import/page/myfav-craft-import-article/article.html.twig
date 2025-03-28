@@ -322,7 +322,7 @@
                                     :disabled="!shopwareProductSettings.updateProductBrandId"
                                     entity="product_manufacturer"
                                     v-model="shopwareProductSettings.customProductBrandId"
-                                    @change="selectProductBrandid"
+                                    @change="selectProductBrandId"
                                 ></sw-entity-single-select>
                             </td>
                             <td>
@@ -330,6 +330,20 @@
                             </td>
                         </tr>
                     </table>
+                </div>
+
+                <div class="myfav-craft-variations">
+                    <div v-for="variation in selectedSearchResult.variations" class="myfav-craft-variation">
+                        <div class="myfav-craft-variation-title">{{ variation.itemColorName }}</div>
+                        <div class="myfav-craft-variation-skus">
+                            <div v-for="variationSku in variation.skus" class="myfav-craft-variation-sku">
+                                <div>{{ variationSku.skuSize.webtext }}</div>
+                                <div>{{ variationSku.description }}</div>
+                                <div>{{ variationSku.skucolor }}</div>
+                                <div>{{ variationSku.retailPrice.price }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <template #modal-footer>
