@@ -196,6 +196,58 @@
                                 </ul>
                             </td>
                         </tr>
+
+                        {# Custom-Field for productFabrics #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    @change="shopwareProductSettings.updateProductCustomFieldForFabrics = $event"
+                                    :value="shopwareProductSettings.updateProductCustomFieldForFabrics"
+                                    v-if="productCustomFieldForFabrics !== null"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Material/Fabrics</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-text-field
+                                    :disabled="!shopwareProductSettings.updateProductCustomFieldForFabrics"
+                                    v-if="productCustomFieldForFabrics !== null"
+                                    v-model="shopwareProductSettings.customProductCustomFieldForFabrics"
+                                ></sw-text-field>
+                                <div class="myfav-craft-warning-text" v-else>
+                                    Es wurde in der Plugin-Konfiguration kein Custom-Feld für dieses Feld ausgewählt. Das Feld wird beim Import ignoriert.
+                                    Eine Prüfung ist empfohlen. Es handelt sich hierbei um die Information über das Material des Artikels, die aus rechtlichen Gründen ggf.
+                                    angegeben werden muss.
+                                </div>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                {{ selectedSearchResult.productFabrics }}
+                            </td>
+                        </tr>
+
+                        {# ProductFeatures: Eigenschaften/Besonderheiten #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductFeatures"
+                                    @change="shopwareProductSettings.updateProductFeatures = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Produkt-Features</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-textarea-field
+                                    :disabled="!shopwareProductSettings.updateProductFeatures"
+                                    :multiline="true"
+                                    v-model="shopwareProductSettings.customProductFeatures"
+                                ></sw-textarea-field>
+                                <small>(Mehrere Features können angegeben werden. Jede Zeile ist ein Feature.)</small>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                <ul v-if="selectedSearchResult.productFeature != null && selectedSearchResult.productFeature.length > 0" class="myfav-craft-ul-li-list">
+                                    <li v-for="productFeature in selectedSearchResult.productFeature">{{ productFeature.value }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+
                     </table>
                 </div>
 

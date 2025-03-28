@@ -27,6 +27,7 @@ Component.register('myfav-craft-import-article', {
             categoryCollection: new Shopware.Data.EntityCollection('collection', 'collection', {}, null, []),
             craftProductSearchApiService: null,
             debugMode: false,
+            productCustomFieldForFabrics: null,
             showArticleDetailModal: false,
             searchDisabled: false,
             searchResultJson: null,
@@ -34,12 +35,16 @@ Component.register('myfav-craft-import-article', {
             searchTerm: "",
             selectedSearchResult: null,
             shopwareProductSettings: {
+                customProductCustomFieldForFabrics: "",
                 customProductDescription: "",
+                customProductFeatures: "",
                 customProductName: "",
                 customProductNumber: "",
                 customTaxId: null,
+                updateProductCustomFieldForFabrics: false,
                 updateProductCategories: false,
                 updateProductDescription: false,
+                updateProductFeatures: false,
                 updateProductFromCraftApi: true,
                 updateProductName: false,
                 updateProductNumber: false,
@@ -95,8 +100,17 @@ Component.register('myfav-craft-import-article', {
 
             this.debugMode = pluginConfig['MyfavCraftImport.config.debugMode'];
             this.shopwareProductSettings.customTaxId = pluginConfig['MyfavCraftImport.config.defaultTaxId'];
+            this.productCustomFieldForFabrics = pluginConfig['MyfavCraftImport.config.productCustomFieldForFabrics'];
             this.searchResultObject = JSON.parse(searchResult.data.data);
             this.searchResultJson = JSON.stringify(this.searchResultObject , null, 2);
+
+            if(this.productCustomFieldForFabrics !== null) {
+                this.productCustomFieldForFabrics = this.productCustomFieldForFabrics.trim();
+
+                if(this.productCustomFieldForFabrics.length === 0) {
+                    this.productCustomFieldForFabrics = null;
+                }
+            }
 
             // Eingabefelder nach dem Ladevorgang wieder aktivieren.
             this.searchDisabled = false;

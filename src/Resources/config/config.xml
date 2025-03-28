@@ -32,5 +32,26 @@
             <label>Default Tax-Rate</label>
             <label lang="de-DE">Standard-Steuersatz</label>
         </component>
+
+        <!-- productFabrics -->
+        <input-field type="text">
+            <name>productCustomFieldForFabrics</name>
+            <label>Technical Name of Custom Field for Fabrics-Information</label>
+            <label lang="de-DE">Technischer-Name des Zusatzfeldes für Materialzusammensetzung</label>
+            <defaultValue>custom_material_field</defaultValue>
+            <helpText>May be required because of legal conditions. Is only saved, if a custom field is defined here. API-Field: productFabrics</helpText>
+            <helpText lang="de-DE">Wird aus rechtlichen Gründen ggf. benötigt. Wird nur übernommen, wenn hier ein Wert definiert ist. API-Feld: productFabrics</helpText>
+        </input-field>
+
+        <!-- productFeatures to Shopware property Mapping -->
+        <component name="sw-entity-single-select">
+            <name>productFeaturePropertyId</name>
+            <entity>property_group</entity>
+            <label>Property-Group from the shopware store, that Product-Features should be added to</label>
+            <label lang="de-DE">Eigenschafts-Gruppe des Shops, der Product-Features zugeordnet werden sollen</label>
+            <defaultValue></defaultValue>
+            <helpText>If nothing is selected, properties are not synced at all. The Craft-API only offers Options without groups. For example, it is conceivable to transfer it to a property group "Special Features".</helpText>
+            <helpText lang="de-DE">Wenn hier nichts ausgewählt ist, werden die Features nicht übernommen. Die Craft-API gibt einfach nur Optionen ohne Gruppen-Namen an. Denkbar ist bspw. eine Übernahme in eine Eigenschafts-Gruppe "Besonderheiten".</helpText>
+        </component>
     </card>
 </config>
