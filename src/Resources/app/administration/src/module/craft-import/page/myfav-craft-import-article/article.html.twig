@@ -203,17 +203,17 @@
                                 <sw-switch-field
                                     @change="shopwareProductSettings.updateProductCustomFieldForFabrics = $event"
                                     :value="shopwareProductSettings.updateProductCustomFieldForFabrics"
-                                    v-if="productCustomFieldForFabrics !== null"
+                                    v-if="productCustomFieldForFabrics !== null && productCustomFieldForFabrics != ''"
                                 ></sw-switch-field>
                             </td>
                             <td  class="myfav-craft-import-article-col-fieldname">Material/Fabrics</td>
                             <td  class="myfav-craft-import-article-col-custom-value">
                                 <sw-text-field
                                     :disabled="!shopwareProductSettings.updateProductCustomFieldForFabrics"
-                                    v-if="productCustomFieldForFabrics !== null"
+                                    v-if="productCustomFieldForFabrics !== null && productCustomFieldForFabrics != ''"
                                     v-model="shopwareProductSettings.customProductCustomFieldForFabrics"
                                 ></sw-text-field>
-                                <div class="myfav-craft-warning-text" v-else>
+                                <div v-else class="myfav-craft-warning-text">
                                     Es wurde in der Plugin-Konfiguration kein Custom-Feld für dieses Feld ausgewählt. Das Feld wird beim Import ignoriert.
                                     Eine Prüfung ist empfohlen. Es handelt sich hierbei um die Information über das Material des Artikels, die aus rechtlichen Gründen ggf.
                                     angegeben werden muss.
@@ -230,16 +230,22 @@
                                 <sw-switch-field
                                     :value="shopwareProductSettings.updateProductFeatures"
                                     @change="shopwareProductSettings.updateProductFeatures = $event"
+                                    v-if="propertyIdForProductFeature !== null && propertyIdForProductFeature !== ''"
                                 ></sw-switch-field>
                             </td>
                             <td  class="myfav-craft-import-article-col-fieldname">Produkt-Features</td>
                             <td  class="myfav-craft-import-article-col-custom-value">
-                                <sw-textarea-field
-                                    :disabled="!shopwareProductSettings.updateProductFeatures"
-                                    :multiline="true"
-                                    v-model="shopwareProductSettings.customProductFeatures"
-                                ></sw-textarea-field>
-                                <small>(Mehrere Features können angegeben werden. Jede Zeile ist ein Feature.)</small>
+                                <div v-if="propertyIdForProductFeature !== null && propertyIdForProductFeature !== ''">
+                                    <sw-textarea-field
+                                        :disabled="!shopwareProductSettings.updateProductFeatures"
+                                        :multiline="true"
+                                        v-model="shopwareProductSettings.customProductFeatures"
+                                    ></sw-textarea-field>
+                                    <small>(Mehrere Features können angegeben werden. Jede Zeile ist ein Feature.)</small>
+                                </div>
+                                <div v-else class="myfav-craft-warning-text">
+                                    PropertyID in Plugin-Konfiguration ist nicht gesetzt.
+                                </div>
                             </td>
                             <td class="myfav-craft-import-article-col-original-value">
                                 <ul v-if="selectedSearchResult.productFeature != null && selectedSearchResult.productFeature.length > 0" class="myfav-craft-ul-li-list">
@@ -248,6 +254,81 @@
                             </td>
                         </tr>
 
+                        {# ProductFit #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductFit"
+                                    @change="shopwareProductSettings.updateProductFit = $event"
+                                    v-if="propertyIdForProductFit !== null && propertyIdForProductFit != ''"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Produkt-Passform</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-text-field
+                                    :disabled="!shopwareProductSettings.updateProductFit"
+                                    v-model="shopwareProductSettings.customProductFit"
+                                    v-if="propertyIdForProductFit !== null && propertyIdForProductFit != ''"
+                                ></sw-text-field>
+                                <div v-else class="myfav-craft-warning-text">
+                                    PropertyID in Plugin-Konfiguration ist nicht gesetzt.
+                                </div>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                <ul v-if="selectedSearchResult.productFit != null && selectedSearchResult.productFit.length > 0" class="myfav-craft-ul-li-list">
+                                    <li v-for="productFit in selectedSearchResult.productFit">{{ productFit.value }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        {# ProductGender #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductGender"
+                                    @change="shopwareProductSettings.updateProductGender = $event"
+                                    v-if="propertyIdForProductGender !== null && propertyIdForProductGender != ''"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Produkt-Gender</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-text-field
+                                    :disabled="!shopwareProductSettings.updateProductGender"
+                                    v-model="shopwareProductSettings.customProductGender"
+                                    v-if="propertyIdForProductGender !== null && propertyIdForProductGender != ''"
+                                ></sw-text-field>
+                                <div v-else class="myfav-craft-warning-text">
+                                    PropertyID in Plugin-Konfiguration ist nicht gesetzt.
+                                </div>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                <ul v-if="selectedSearchResult.productGender != null && selectedSearchResult.productGender.length > 0" class="myfav-craft-ul-li-list">
+                                    <li v-for="productGender in selectedSearchResult.productGender">{{ productGender.value }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        {# ProductBrand #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductBrandId"
+                                    @change="shopwareProductSettings.updateProductBrandId = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Hersteller/Marke</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-entity-single-select
+                                    :disabled="!shopwareProductSettings.updateProductBrandId"
+                                    entity="product_manufacturer"
+                                    v-model="shopwareProductSettings.customProductBrandId"
+                                    @change="selectProductBrandid"
+                                ></sw-entity-single-select>
+                            </td>
+                            <td>
+                                {{ selectedSearchResult.productBrand }}
+                            </td>
+                        </tr>
                     </table>
                 </div>
 

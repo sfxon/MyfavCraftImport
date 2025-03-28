@@ -28,6 +28,9 @@ Component.register('myfav-craft-import-article', {
             craftProductSearchApiService: null,
             debugMode: false,
             productCustomFieldForFabrics: null,
+            propertyIdForProductFeature: null,
+            propertyIdForProductFit: null,
+            propertyIdForProductGender: null,
             showArticleDetailModal: false,
             searchDisabled: false,
             searchResultJson: null,
@@ -35,16 +38,22 @@ Component.register('myfav-craft-import-article', {
             searchTerm: "",
             selectedSearchResult: null,
             shopwareProductSettings: {
+                customProductBrandId: "", // E.g. Manufacturer.
                 customProductCustomFieldForFabrics: "",
                 customProductDescription: "",
                 customProductFeatures: "",
+                customProductFit: "",
+                customProductGender: "",
                 customProductName: "",
                 customProductNumber: "",
                 customTaxId: null,
+                updateProductBrandId: false,
                 updateProductCustomFieldForFabrics: false,
                 updateProductCategories: false,
                 updateProductDescription: false,
                 updateProductFeatures: false,
+                updateProductFit: false,
+                updateProductGender: false,
                 updateProductFromCraftApi: true,
                 updateProductName: false,
                 updateProductNumber: false,
@@ -101,6 +110,9 @@ Component.register('myfav-craft-import-article', {
             this.debugMode = pluginConfig['MyfavCraftImport.config.debugMode'];
             this.shopwareProductSettings.customTaxId = pluginConfig['MyfavCraftImport.config.defaultTaxId'];
             this.productCustomFieldForFabrics = pluginConfig['MyfavCraftImport.config.productCustomFieldForFabrics'];
+            this.propertyIdForProductFeature = pluginConfig['MyfavCraftImport.config.propertyIdForProductFeature'];
+            this.propertyIdForProductFit = pluginConfig['MyfavCraftImport.config.propertyIdForProductFit'];
+            this.propertyIdForProductGender = pluginConfig['MyfavCraftImport.config.propertyIdForProductGender'];
             this.searchResultObject = JSON.parse(searchResult.data.data);
             this.searchResultJson = JSON.stringify(this.searchResultObject , null, 2);
 
@@ -114,6 +126,10 @@ Component.register('myfav-craft-import-article', {
 
             // Eingabefelder nach dem Ladevorgang wieder aktivieren.
             this.searchDisabled = false;
+        },
+
+        selectProductBrandId(id, item) {
+            this.shopwareProductSettings.customProductBrand = id;
         },
 
         selectTaxRate(id, item) {

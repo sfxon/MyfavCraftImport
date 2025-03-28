@@ -53,5 +53,27 @@
             <helpText>If nothing is selected, properties are not synced at all. The Craft-API only offers Options without groups. For example, it is conceivable to transfer it to a property group "Special Features".</helpText>
             <helpText lang="de-DE">Wenn hier nichts ausgewählt ist, werden die Features nicht übernommen. Die Craft-API gibt einfach nur Optionen ohne Gruppen-Namen an. Denkbar ist bspw. eine Übernahme in eine Eigenschafts-Gruppe "Besonderheiten".</helpText>
         </component>
+
+        <!-- productFit -->
+        <component name="sw-entity-single-select">
+            <name>productFitPropertyId</name>
+            <entity>property_group</entity>
+            <label>Property-Group from the shopware store, that ProductFit should be added to</label>
+            <label lang="de-DE">Eigenschafts-Gruppe des Shops, der ProductFit zugeordnet werden sollen</label>
+            <defaultValue></defaultValue>
+            <helpText>If nothing is selected, properties are not synced at all. API-Field: productFit</helpText>
+            <helpText lang="de-DE">Wird nur übernommen, wenn hier ein Wert definiert ist. API-Feld: productFit</helpText>
+        </component>
+
+        <!-- productGender -->
+        <component name="sw-entity-single-select">
+            <name>productGenderPropertyId</name>
+            <entity>property_group</entity>
+            <label>Property-Group from the shopware store, that ProductGender should be added to</label>
+            <label lang="de-DE">Eigenschafts-Gruppe des Shops, der ProductGender zugeordnet werden sollen</label>
+            <defaultValue></defaultValue>
+            <helpText>If nothing is selected, properties are not synced at all. API-Field: productFit</helpText>
+            <helpText lang="de-DE">Wird nur übernommen, wenn hier ein Wert definiert ist. API-Feld: productFit</helpText>
+        </component>
     </card>
 </config>
