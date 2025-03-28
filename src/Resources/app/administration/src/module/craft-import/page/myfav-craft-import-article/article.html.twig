@@ -166,13 +166,34 @@
                                 <sw-entity-single-select
                                     :disabled="!shopwareProductSettings.updateTaxId"
                                     entity="tax"
-                                    :multiline="true"
                                     v-model="shopwareProductSettings.customTaxId"
                                     @change="selectTaxRate"
                                 ></sw-entity-single-select>
                             </td>
-                            <td class="myfav-craft-import-article-col-original-value">&nbsp;
-                            
+                            <td class="myfav-craft-import-article-col-original-value">&nbsp;</td>
+                        </tr>
+
+                        {# Kategorie-Zuweisung #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateProductCategories"
+                                    @change="shopwareProductSettings.updateProductCategories = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Kategorie</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-category-tree-field
+                                    :categories-collection="categoryCollection"
+                                    :criteria="categoryCriteria"
+                                    :disabled="!shopwareProductSettings.updateProductCategories"
+                                    placeholder=""
+                                ></sw-category-tree-field>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">
+                                <ul v-if="selectedSearchResult.productCategory.length > 0" class="myfav-craft-ul-li-list">
+                                    <li v-for="craftCategory in selectedSearchResult.productCategory">{{ craftCategory.value }}</li>
+                                </ul>
                             </td>
                         </tr>
                     </table>

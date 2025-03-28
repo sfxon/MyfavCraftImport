@@ -3,11 +3,12 @@ import './article.scss';
 import CraftProductSearchApiService from "./../../service/api/craft-product-search.api.service.js";
 
 const {Application, Component, Mixin, Service} = Shopware;
+const { Criteria } = Shopware.Data;
 
 Component.register('myfav-craft-import-article', {
     template,
 
-    inject: ['systemConfigApiService'],
+    inject: ['repositoryFactory', 'systemConfigApiService'],
 
     mixins: [
         Mixin.getByName('notification')
@@ -21,19 +22,23 @@ Component.register('myfav-craft-import-article', {
 
     data() {
         return {
-            searchTerm: "",
+            // Erstelle initial eine leere categoryCollection als EntityCollection.
+            // Das ist wichtig, da sonst keine Kategorien in der Kategorie-Auswahl-Liste angezeigt werden.
+            categoryCollection: new Shopware.Data.EntityCollection('collection', 'collection', {}, null, []),
             craftProductSearchApiService: null,
             debugMode: false,
             showArticleDetailModal: false,
             searchDisabled: false,
             searchResultJson: null,
             searchResultObject: null,
+            searchTerm: "",
             selectedSearchResult: null,
             shopwareProductSettings: {
                 customProductDescription: "",
                 customProductName: "",
                 customProductNumber: "",
                 customTaxId: null,
+                updateProductCategories: false,
                 updateProductDescription: false,
                 updateProductFromCraftApi: true,
                 updateProductName: false,
@@ -41,6 +46,17 @@ Component.register('myfav-craft-import-article', {
                 updateTaxId: false
             }
         }
+    },
+
+    computed: {
+        categoryRepository() {
+            return this.repositoryFactory.create('category');
+        },
+
+        categoryCriteria() {
+            const criteria = new Criteria(1, 500);
+            return criteria;
+        },
     },
 
     methods: {
@@ -87,7 +103,7 @@ Component.register('myfav-craft-import-article', {
         },
 
         selectTaxRate(id, item) {
-            this.shopwareProductSettings.customTaxRate = id;
+            this.shopwareProductSettings.customTaxId = id;
         }
     }
 });
