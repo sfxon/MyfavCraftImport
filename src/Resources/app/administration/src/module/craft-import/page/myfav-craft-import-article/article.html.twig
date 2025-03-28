@@ -152,6 +152,29 @@
                                 {{ selectedSearchResult.productText }}
                             </td>
                         </tr>
+
+                        {# Steuer-Einstellung #}
+                        <tr>
+                            <td class="myfav-craft-import-article-col-override">
+                                <sw-switch-field
+                                    :value="shopwareProductSettings.updateTaxId"
+                                    @change="shopwareProductSettings.updateTaxId = $event"
+                                ></sw-switch-field>
+                            </td>
+                            <td  class="myfav-craft-import-article-col-fieldname">Steuersatz</td>
+                            <td  class="myfav-craft-import-article-col-custom-value">
+                                <sw-entity-single-select
+                                    :disabled="!shopwareProductSettings.updateTaxId"
+                                    entity="tax"
+                                    :multiline="true"
+                                    v-model="shopwareProductSettings.customTaxId"
+                                    @change="selectTaxRate"
+                                ></sw-entity-single-select>
+                            </td>
+                            <td class="myfav-craft-import-article-col-original-value">&nbsp;
+                            
+                            </td>
+                        </tr>
                     </table>
                 </div>
 

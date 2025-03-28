@@ -24,7 +24,6 @@ Component.register('myfav-craft-import-article', {
             searchTerm: "",
             craftProductSearchApiService: null,
             debugMode: false,
-            pluginConfig: null,
             showArticleDetailModal: false,
             searchDisabled: false,
             searchResultJson: null,
@@ -34,10 +33,12 @@ Component.register('myfav-craft-import-article', {
                 customProductDescription: "",
                 customProductName: "",
                 customProductNumber: "",
+                customTaxId: null,
                 updateProductDescription: false,
                 updateProductFromCraftApi: true,
                 updateProductName: false,
                 updateProductNumber: false,
+                updateTaxId: false
             }
         }
     },
@@ -77,11 +78,16 @@ Component.register('myfav-craft-import-article', {
             ]);
 
             this.debugMode = pluginConfig['MyfavCraftImport.config.debugMode'];
+            this.shopwareProductSettings.customTaxId = pluginConfig['MyfavCraftImport.config.defaultTaxId'];
             this.searchResultObject = JSON.parse(searchResult.data.data);
             this.searchResultJson = JSON.stringify(this.searchResultObject , null, 2);
 
             // Eingabefelder nach dem Ladevorgang wieder aktivieren.
             this.searchDisabled = false;
         },
+
+        selectTaxRate(id, item) {
+            this.shopwareProductSettings.customTaxRate = id;
+        }
     }
 });

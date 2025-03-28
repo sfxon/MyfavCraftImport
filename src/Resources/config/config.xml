@@ -25,5 +25,12 @@
             <label lang="de-DE">Entwickler-Modus</label>
             <defaultValue>false</defaultValue>
         </input-field>
+
+        <component name="sw-entity-single-select">
+            <name>defaultTaxId</name>
+            <entity>tax</entity>
+            <label>Default Tax-Rate</label>
+            <label lang="de-DE">Standard-Steuersatz</label>
+        </component>
     </card>
 </config>
