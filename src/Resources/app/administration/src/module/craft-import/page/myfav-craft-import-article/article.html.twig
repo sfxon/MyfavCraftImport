@@ -337,6 +337,12 @@
                         <div class="myfav-craft-variation-title">{{ variation.itemColorName }}</div>
                         <div class="myfav-craft-variation-skus">
                             <div v-for="variationSku in variation.skus" class="myfav-craft-variation-sku">
+                                <sw-switch-field
+                                    {# :value="shopwareProductSettings.updateProductBrandId" #}
+                                    {# @change="shopwareProductSettings.updateProductBrandId = $event" #}
+                                    :value="variationSku.myfavCraftSettings.activated"
+                                ></sw-switch-field>
+
                                 <div>{{ variationSku.skuSize.webtext }}</div>
                                 <div>{{ variationSku.description }}</div>
                                 <div>{{ variationSku.skucolor }}</div>

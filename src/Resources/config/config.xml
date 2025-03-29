@@ -21,7 +21,7 @@
 
         <input-field type="bool">
             <name>debugMode</name>
-            <label>Entwickler-Modus</label>
+            <label>Developer-Mode</label>
             <label lang="de-DE">Entwickler-Modus</label>
             <defaultValue>false</defaultValue>
         </input-field>
@@ -32,6 +32,13 @@
             <label>Default Tax-Rate</label>
             <label lang="de-DE">Standard-Steuersatz</label>
         </component>
+
+        <input-field type="bool">
+            <name>initiallyActivateAllVariants</name>
+            <label>Initially activate all variants</label>
+            <label lang="de-DE">Initial alle Varianten aktivieren</label>
+            <defaultValue>false</defaultValue>
+        </input-field>
 
         <!-- productFabrics -->
         <input-field type="text">

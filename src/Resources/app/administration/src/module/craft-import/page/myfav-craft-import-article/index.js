@@ -27,6 +27,7 @@ Component.register('myfav-craft-import-article', {
             categoryCollection: new Shopware.Data.EntityCollection('collection', 'collection', {}, null, []),
             craftProductSearchApiService: null,
             debugMode: false,
+            initiallyActivateAllVariants: false,
             productCustomFieldForFabrics: null,
             propertyIdForProductFeature: null,
             propertyIdForProductFit: null,
@@ -37,6 +38,7 @@ Component.register('myfav-craft-import-article', {
             searchResultObject: null,
             searchTerm: "",
             selectedSearchResult: null,
+            selectedSearchResultVariants: null,
             shopwareProductSettings: {
                 customProductBrandId: "", // E.g. Manufacturer.
                 customProductCustomFieldForFabrics: "",
@@ -85,6 +87,25 @@ Component.register('myfav-craft-import-article', {
         onShowArticleDetailModal(item) {
             this.selectedSearchResult = item;
             this.showArticleDetailModal = true;
+
+            // Setup variants.
+            this.selectedSearchResultVariants = [];
+
+            for(let i = 0, j = this.selectedSearchResult.variations.length; i < j; i++) {
+                let variation = this.selectedSearchResult.variations[i];
+
+                for(let k = 0, l = variation.skus.length; k < l; k++) {
+                    console.log(variation.skus[k]);
+
+                    let myfavCraftSettings = {
+                        activated: this.initiallyActivateAllVariants
+                    };
+
+                    variation.skus[k].myfavCraftSettings = myfavCraftSettings;
+
+                    //variation.skus[k].myfavCraftSettings.activated = this.initiallyActivateAllVariants;
+                }
+            }
         },
 
         async searchForSearchTerm() {
@@ -113,6 +134,7 @@ Component.register('myfav-craft-import-article', {
             this.propertyIdForProductFeature = pluginConfig['MyfavCraftImport.config.propertyIdForProductFeature'];
             this.propertyIdForProductFit = pluginConfig['MyfavCraftImport.config.propertyIdForProductFit'];
             this.propertyIdForProductGender = pluginConfig['MyfavCraftImport.config.propertyIdForProductGender'];
+            this.initiallyActivateAllVariants = pluginConfig['MyfavCraftImport.config.initiallyActivateAllVariants'];
             this.searchResultObject = JSON.parse(searchResult.data.data);
             this.searchResultJson = JSON.stringify(this.searchResultObject , null, 2);
 
@@ -122,6 +144,10 @@ Component.register('myfav-craft-import-article', {
                 if(this.productCustomFieldForFabrics.length === 0) {
                     this.productCustomFieldForFabrics = null;
                 }
+            }
+
+            if(this.initiallyActivateAllVariants === null) {
+                this.initiallyActivateAllVariants = false;
             }
 
             // Eingabefelder nach dem Ladevorgang wieder aktivieren.
