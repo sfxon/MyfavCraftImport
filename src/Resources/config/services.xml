@@ -4,11 +4,224 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <!-- Controller -->
+        <!-- Admin API Controller -->
+        <service id="Myfav\CraftImport\Administration\Controller\CraftProductImageSaveApiController" public="true">
+            <argument type="service" id="Myfav\CraftImport\Service\ProductImageProcessorService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="Myfav\CraftImport\Administration\Controller\CraftProductSaveApiController" public="true">
+            <argument type="service" id="Myfav\CraftImport\Service\CraftProductSaveService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
         <service id="Myfav\CraftImport\Administration\Controller\CraftProductSearchApiController" public="true">
             <argument id="Shopware\Core\System\SystemConfig\SystemConfigService" type="service"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <!-- Data Parsers -->
+        <service id="Myfav\CraftImport\Service\CraftApiResultParser">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <service id="Myfav\CraftImport\Service\CustomDataParser">
+            <argument type="service" id="service_container" />
+        </service>
+
+        <!-- Entity -->
+        <service id="Myfav\CraftImport\Core\Content\ImportedArticle\ImportedArticleDefinition">
+            <tag name="shopware.entity.definition" entity="imported_article" />
+        </service>
+
+        <service id="Myfav\CraftImport\Core\Content\MyfavCraftImportArticle\MyfavCraftImportArticleDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_craft_import_article" />
+        </service>
+
+        <service id="Myfav\CraftImport\Core\Content\MyfavCraftImportImage\MyfavCraftImportImageDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_craft_import_image" />
+        </service>
+
+        <!-- Import Services -->
+        <service id="Myfav\CraftImport\ImportFieldService\CloseoutImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CmsPageImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CraftCustomFieldsImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+        
+        <service id="Myfav\CraftImport\ImportFieldService\CraftDescriptionImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CraftMainArticleStockImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CraftMetaDescriptionImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CraftMetaTitleImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CraftProductNameImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CustomCustomFieldsImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CustomPriceImportService" public="true">
+            <argument type="service" id="tax.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\CustomPropertyImportService" public="true">
+            <argument type="service" id="Myfav\CraftImport\Service\PropertyService"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\DeliveryTimeImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\ManufacturerNumberImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\PriceImportService" public="true">
+            <argument type="service" id="tax.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\PropertyImportService" public="true">
+            <argument type="service" id="Myfav\CraftImport\Service\PropertyService"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\PurchasePriceImportService" public="true">
+            <argument type="service" id="tax.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\PurchaseStepsImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\RestockTimeImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\TakeOverFieldValueImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\TakeOverNumberImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\TaxImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\VariantActiveImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\VariantConfiguratorSettingsImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\VariantOptionsImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\VariantPriceImportService" public="true">
+            <argument type="service" id="tax.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\VariantStockImportService" public="true">
+        </service>
+
+        <service id="Myfav\CraftImport\ImportFieldService\VisibilitiesImportService" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <!-- Service -->
+        <service id="Myfav\CraftImport\Service\ArticleNumberStatusService" public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ImportedArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ProductService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\CraftProductSaveService">
+            <argument type="service" id="Myfav\CraftImport\Service\CraftApiResultParser"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ImportArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\MyfavCraftImportArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\CustomDataParser"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\CraftVariantService" public="true">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="Myfav\CraftImport\Service\PropertyService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\ImportedArticleService">
+            <argument type="service" id="imported_article.repository"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\ImportArticleService">
+            <argument type="service" id="Myfav\CraftImport\Service\ArticleNumberStatusService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\CraftVariantService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ImportedArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ProductService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\MyfavCraftImportArticleService">
+            <argument type="service" id="myfav_craft_import_article.repository"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\MyfavCraftImportMediaService">
+            <argument type="service" id="media.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Media\MediaService" />
+            <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver" />
+        </service>
+
+        <service id="Myfav\CraftImport\Service\ProductImageProcessorService">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ProductService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\MyfavCraftImportMediaService" />
+            <argument type="service" id="myfav_craft_import_image.repository" />
+            <argument type="service" id="product_media.repository" />
+            <argument type="service" id="media.repository" />
+        </service>
+
+        <service id="Myfav\CraftImport\Service\ProductService" public="true">
+            <argument type="service" id="product_category.repository"/>
+            <argument type="service" id="product_configurator_setting.repository"/>
+            <argument type="service" id="product_property.repository"/>
+            <argument type="service" id="product_option.repository"/>
+            <argument type="service" id="product_visibility.repository"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="Myfav\CraftImport\Service\PropertyService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\PropertyService" public="true">
+            <argument type="service" id="property_group.repository"/>
+            <argument type="service" id="property_group_option.repository"/>
+        </service>
+
+        <!-- Storefront Controller -->
+        <service id="Myfav\CraftImport\Storefront\Controller\CraftApiSimulationController" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
             </call>
         </service>
     </services>

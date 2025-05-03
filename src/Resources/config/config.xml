@@ -82,5 +82,58 @@
             <helpText>If nothing is selected, properties are not synced at all. API-Field: productFit</helpText>
             <helpText lang="de-DE">Wird nur übernommen, wenn hier ein Wert definiert ist. API-Feld: productFit</helpText>
         </component>
+
+        <!-- currencyId -->
+        <component name="sw-entity-single-select">
+            <name>currencyId</name>
+            <entity>currency</entity>
+            <label>Currency for imported articles.</label>
+            <label lang="de-DE">Währung für importierte Artikel </label>
+            <defaultValue></defaultValue>
+        </component>
+
+        <!-- taxId -->
+        <component name="sw-entity-single-select">
+            <name>taxId</name>
+            <entity>tax</entity>
+            <label>Tax Rate for imported articles.</label>
+            <label lang="de-DE">Steuersatz für importierte Artikel </label>
+            <defaultValue></defaultValue>
+        </component>
+
+        <!-- deliveryTimeId -->
+        <component name="sw-entity-single-select">
+            <name>deliveryTimeId</name>
+            <entity>delivery_time</entity>
+            <label>Delivery Time for imported articles.</label>
+            <label lang="de-DE">Lieferzeit für importierte Artikel </label>
+            <defaultValue></defaultValue>
+        </component>
+
+        <!-- cmsPageId -->
+        <component name="sw-entity-single-select">
+            <name>cmsPageId</name>
+            <entity>cms_page</entity>
+            <label>Layout (CMS-Page) for imported articles.</label>
+            <label lang="de-DE">Layout (CMS-Seite) für importierte Artikel </label>
+            <defaultValue></defaultValue>
+        </component>
+
+        <!-- salesChannels -->
+        <component name="sw-entity-multi-id-select">
+            <name>salesChannels</name>
+            <entity>sales_channel</entity>
+            <label>Sales-Channels for imported articles.</label>
+            <label lang="de-DE">Verkaufskanäle für importierte Artikel </label>
+            <defaultValue>[]</defaultValue>
+        </component>
+
+        <!-- RestockTime -->
+        <input-field type="text">
+            <name>restockTime</name>
+            <label>Restock Time (in days)</label>
+            <label lang="de-DE">Wiederauffüllzeit (in Tagen)</label>
+            <defaultValue>90</defaultValue>
+        </input-field>
     </card>
 </config>

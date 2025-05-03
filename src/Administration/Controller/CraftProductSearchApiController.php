@@ -2,25 +2,14 @@
 
 namespace Myfav\CraftImport\Administration\Controller;
 
-use Doctrine\DBAL\ArrayParameterType;
-use Doctrine\DBAL\Connection;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
-use Shopware\Core\Content\MailTemplate\Subscriber\MailSendSubscriberConfig;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\Doctrine\FetchModeHelper;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
-use Shopware\Core\Framework\Routing\Annotation\RouteScope;
-use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[Route(defaults: ['_routeScope' => ['api']])]
 class CraftProductSearchApiController extends AbstractController
@@ -44,7 +33,7 @@ class CraftProductSearchApiController extends AbstractController
                 'base_uri' => $pluginConfig['craftApiUrl']
             ]
         );
-        
+
         try {
             $response = $client->request('POST', 'graphql', [
                 'headers' => [
@@ -57,9 +46,15 @@ class CraftProductSearchApiController extends AbstractController
                 ]
             ]);
             $statusCode = $response->getStatusCode();
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $responseBodyAsString = $response->getBody()->getContents();
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            if ($e->hasResponse()) {
+                $body = $e->getResponse()->getBody()->getContents();
+                throw(new \Exception($body));
+            } else {
+                throw $e;
+            }
+        } catch (\Exception $e) {
+            throw($e);
         }
 
         switch ($statusCode) {
