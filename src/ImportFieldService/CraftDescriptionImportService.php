@@ -27,6 +27,10 @@ class CraftDescriptionImportService
             }
         }
 
+        if($data !== null) {
+            $data = nl2br($data);
+        }
+
         return $data;
     }
 }

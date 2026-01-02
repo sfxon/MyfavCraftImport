@@ -1,5 +1,14 @@
 import './page/myfav-craft-import-dashboard';
 import './page/myfav-craft-import-article';
+import './page/myfav-craft-import-select-verein';
+import './page/myfav-craft-imported-article';
+import './page/myfav-craft-import-assign-verein';
+
+/* Admin Pages for Blog Posts */
+import './page/myfav-verein';
+import './page/myfav-verein/list';
+import './page/myfav-verein/detail';
+import './page/myfav-verein/create';
 
 import deDE from './snippet/de-DE';
 import enGB from './snippet/en-GB';
@@ -28,6 +37,33 @@ Module.register('myfav-craft-import', {
             component: 'myfav-craft-import-dashboard',
             path: 'dashboard'
         },
+        importedArticle: {
+            component: 'myfav-craft-imported-article',
+            path: 'imported-article'
+        },
+        selectVerein: {
+            component: 'myfav-craft-import-select-verein',
+            path: 'select-verein/:myfavCraftImportArticleId',
+            props: {
+                default(route) {
+                    return {
+                        myfavCraftImportArticleId: route.params.myfavCraftImportArticleId,
+                    };
+                },
+            },
+        },
+        assignVerein: {
+            component: 'myfav-craft-import-assign-verein',
+            path: 'assign-verein/:myfavCraftImportArticleId/:myfavVereinId',
+            props: {
+                default(route) {
+                    return {
+                        myfavCraftImportArticleId: route.params.myfavCraftImportArticleId,
+                        myfavVereinId: route.params.myfavVereinId,
+                    };
+                },
+            },
+        }
     },
 
     navigation: [{

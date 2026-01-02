@@ -17,5 +17,22 @@
         "general": {
             "mainMenuItemGeneral": "Craft-Import"
         }
+    },
+    "myfav-craft-verein": {
+        "page": {
+            "detail": {
+                "buttonCancel": "Abbrechen",
+                "buttonSave": "Speichern",
+                "cardTitle": "Allgemeine Informationen",
+                "labelName": "Name",
+                "labelProductNumberToken": "Artikel-Nummer-Token",
+                "title": "Verein erstellen/bearbeiten:"
+            },
+            "list": {
+                "buttonNew": "Neuen Verein anlegen",
+                "menuTitle": "Vereine",
+                "title": "Vereine"
+            }
+        }
     }
 }

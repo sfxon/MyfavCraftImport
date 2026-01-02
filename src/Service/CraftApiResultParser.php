@@ -42,7 +42,7 @@ class CraftApiResultParser
 
         // active | taken from skus
         // available | Shopware internal, write protected.
-        $fields['isCloseout'] = new ImportField(null, 'CloseoutImportService');
+        $fields['isCloseout'] = new ImportField(null, 'CloseoutDisabledImportService');
         // variation | Shopware internal, write protected.
         // displayGroup | Shopware internal, write protected.
         // variantListingConfig | ignored.
@@ -57,7 +57,8 @@ class CraftApiResultParser
         // shippingFree | ignored.
         // purchasePrices | ignored | e.g. Einkaufspreise.
         // markAsTopseller | ignored.
-        $fields['weight'] = new ImportField(['productWeight'], 'TakeOverNumberImportService');
+        // Weight is ignored for now. Shopware uses a number field, but Craft posts things like 160g/m²
+        // $fields['weight'] = new ImportField(['productWeight'], 'TakeOverNumberImportService', null, 0);
         $fields['width'] = new ImportField(['productWidthStandard'], 'TakeOverNumberImportService');
         $fields['height'] = new ImportField(['productHeightStandard'], 'TakeOverNumberImportService');
         $fields['length'] = new ImportField(['productLengthStandard'], 'TakeOverNumberImportService');
@@ -70,10 +71,10 @@ class CraftApiResultParser
         // options | is part of skus.
         // tags | ignored.
         // categories | Taken from other fields.
-        $fields['metaDescription'] = new ImportField(['description'], 'CraftMetaDescriptionImportService');
+        $fields['metaDescription'] = new ImportField(['productText'], 'CraftMetaDescriptionImportService');
         $fields['name'] = new ImportField(['productName'], 'CraftProductNameImportService');
         // keywords | ignored.
-        $fields['description'] = new ImportField(['description'], 'CraftDescriptionImportService');
+        $fields['description'] = new ImportField(['productText'], 'CraftDescriptionImportService');
         $fields['metaTitle'] = new ImportField(['productName'], 'CraftMetaTitleImportService');
         // packUnit | ignored.
         // packUnitPlural | ignored.

@@ -16,11 +16,14 @@ class TakeOverNumberImportService
     /**
      * process
      *
+     * @param  Context $context
      * @param  mixed $importData
      * @param  ?array $fieldDataIndex
+     * @param  mixed $additionalData
+     * @param  mixed $defaultData
      * @return mixed
      */
-    public function process(Context $context, mixed $importData, ?array $fieldDataIndex): mixed
+    public function process(Context $context, mixed $importData, ?array $fieldDataIndex, mixed $additionalData = null, mixed $defaultData = null): mixed
     {
         // Daten auslesen.
         $data = $importData;
@@ -29,7 +32,7 @@ class TakeOverNumberImportService
             if (is_array($data) && array_key_exists($key, $data)) {
                 $data = $data[$key];
             } else {
-                $data = null;
+                $data = $defaultData;
                 break;
             }
         }

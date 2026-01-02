@@ -1,131 +1,95 @@
 {% block myfav_craft_import_article %}
-    <sw-page class="myfav-craft-import-article">
+    <sw-page class="myfav-craft-import-article myfav-craft-import-assign-verein">
+        <template #smart-bar-actions>
+            <sw-button
+                @click="onCancel"
+                v-if="!isActionBarVisible"
+            >
+                Zurück zur Übersicht
+            </sw-button>
+            
+            <sw-button
+                :disabled="isLoading"
+                @click="onCancel"
+                v-if="isActionBarVisible"
+            >
+                {{ $tc('myfav-craft-verein.page.detail.buttonCancel') }}
+            </sw-button>
+
+            <sw-button-process
+                v-model="isSaveSuccessful"
+                class="myfav-craft-verein__save-action"
+                :is-loading="isLoading"
+                variant="primary"
+                @click.prevent="onSave"
+                v-if="isActionBarVisible"
+            >
+                {{ $tc('myfav-craft-verein.page.detail.buttonSave') }}
+            </sw-button-process>
+        </template>
+        
         <template #content>
-            <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchCard">
-                <div class="myfav-craft-import-search-container">
-                    <div class="col-search-term">
-                        <sw-text-field
-                            :disabled="searchDisabled"
-                            :label="$t('myfav-craft-import.article.inputTextSearchTerm')"
-                            @keydown.enter="searchForSearchTerm"
-                            :placeholder="$t('myfav-craft-import.article.inputTextSearchTerm')"
-                            v-model="searchTerm"
-                        />
-                    </div>
-                    <div class="col-search">
-                        <sw-button
-                            @click="searchForSearchTerm"
-                            :disabled="searchDisabled"
-                            size="large"
-                            variant="primary"
-                        >
-                            {{ $t('myfav-craft-import.article.btnSearchForArticle') }}
-                        </sw-button>
-                    </div>
-                </div>
-            </sw-card>
-
             <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchResult">
-                <div class="myfav-craft-import-search-result-container">
-                    <div v-if="searchResultObject == null" class="myfav-craft-import-search-container-no-results">
-                        {{ $t('myfav-craft-import.article.infoStartNewSearch') }}
-                    </div>
-                    <div v-else class="myfav-craft-import-search-container-results">
-                        <h1>Suchergebnis</h1>
-                        <table class="myfav-craft-search-result" v-if="searchResultObject?.data?.productSearch?.result">
-                            <tr 
-                                class="entry"
-                                @click="onShowArticleDetailModal(item)"
-                                v-for="item in searchResultObject.data.productSearch.result"
-                            >
-                                <td>
-                                    <span v-if="item.pictures[0]">
-                                        <img :src="item.pictures[0].imageUrl" class="img-responsive myfav-craft-search-result-image" />
-                                    </span>
-                                    <span v-else-if="item.pictures.imageUrl">
-                                        <img :src="item.pictures.imageUrl" class="img-responsive myfav-craft-search-result-image" />
-                                    </span>
-                                    <span v-else>
-                                        &nbsp;
-                                    </span>
-                                </td>
-                                <td>
-                                    {{ item.productNumber }}
-                                </td>
-                                <td>
-                                    {{ item.productName }}
-                                    <span v-if="item.variations.length > 0" class="myfav-craft-import-variation-count">
-                                        {{ item.variations.length }}
-                                        <span v-if="item.variations.length == 1">Variante</span>
-                                        <span v-else>Varianten</span>
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                <div v-if="myfavCraftImportArticle === null || myfavVerein === null">
+                    Loading..
+                </div>
+                <div v-else>
+                    <h1>
+                        Vereins-Zuweisung für Artikel konfigurieren
+                    </h1>
+                    <ul style="padding-left: 24px">
+                        <li>Custom-Artikel-Name: <b>{{ myfavCraftImportArticle.customData.customProductName }}</b></li>
+                        <li>Custom-Artikel-Nummer: <b>{{ myfavCraftImportArticle.customData.customProductNumber }}</b></li>
+                        <li>Craft-Artikel-Name: {{ myfavCraftImportArticle.craftData.productName }}</li>
+                        <li>Craft-Artikel-Nummer: {{ myfavCraftImportArticle.craftData.productNumber }}</li>
+                        <li>Vereins-Name: {{ myfavVerein.name }}</li>
+                    </ul>
                 </div>
             </sw-card>
 
-            <sw-card class="myfav-craft-import-debug" positionIdentifier="myfavCraftImportDebug" v-if="errorText.length > 0">
-                <b style="color: red;">Fehler:</b><br />
-                <pre v-html="errorText"></pre>
-            </sw-card>
-
-            <sw-card class="myfav-craft-import-debug" positionIdentifier="myfavCraftImportDebug" v-if="debugMode == true">
-                <b>Debug-Ausgabe:</b><br />
-                <pre v-html="lastSearchResultAsString"></pre>
-            </sw-card>
-
-            <sw-card class="myfav-craft-import-debug" positionIdentifier="myfavCraftImportSimulationInfo">
-                <div>Verfügbare Simulation-Suchbegriffe: craft, removed-variant</div>
-            </sw-card>
-
-            <sw-modal
-                :class="['myfav-craft-import-article-modal', { 'is-saving-article': isSavingArticle }]"
-                @modal-close="preventModalCloseOnOutsideClick()"
-                selector="body"
-                title="Artikel bearbeiten"
-                v-if="showArticleDetailModal"
-            size="1600px">
-                <template #modal-title>
-                    <div style="display: flex; align-items: center;">
-                        <h4 id="modalTitleEl" class="sw-modal__title">Artikel bearbeiten</h4>
-                    </div>
-
+            <sw-card
+                class="myfav-craft-import-assign-verein-saving-status"
+                positionIdentifier="myfavCraftAssignVereinArticleSavingStatus"
+                v-if="isSavingArticle"
+            >
+                <div class="myfav-craft-import-saving-status-content">
+                    <div class="myfav-craft-import-info">Speichervorgang:</div>
                     <div
-                        class="myfav-craft-import-saving-status"
-                        v-if="isSavingArticle"
+                        class="myfav-craft-import-saving-status-log"
+                        v-html="saveStatusLog"
+                    ></div>
+                </div>
+            </sw-card>
+            <sw-card
+                class="myfav-craft-import-detail-card"
+                positionIdentifier="myfavCraftAssignVereinArticle"
+                v-else-if="myfavCraftImportArticle !== null && myfavVerein !== null"
+            >
+                <div class="myfav-craft-import-search-result-container">
+                    <div
+                        class="myfav-craft-import-general-error-msg"
+                        v-if="generalErrorMessage !== false"
+                        v-html="generalErrorMessage"
                     >
-                        <div class="myfav-craft-import-saving-status-content">
-                            <div class="myfav-craft-import-info">Speichervorgang:</div>
-                            <div
-                                class="myfav-craft-import-saving-status-log"
-                                v-html="saveStatusLog"
-                            ></div>
-                        </div>
                     </div>
-                </template>
+                    <div class="myfav-craft-import-article-selector">
+                        <sw-switch-field
+                            label="Datenübernahme für diesen Artikel aktivieren"
+                            :value="shopwareProductSettings.updateProductFromCraftApi"
+                        ></sw-switch-field>
 
-                <div class="myfav-craft-import-article-container">
-                    <div class="myfav-craft-import-modal-save-overlay">
-                    </div>
-                    <div class="myfav-craft-import-article-data-container">
-                        <div class="myfav-craft-import-article-selector">
-                            <sw-switch-field
-                                label="Datenübernahme für diesen Artikel aktivieren"
-                                :value="shopwareProductSettings.updateProductFromCraftApi"
-                            ></sw-switch-field>
+                        <table class="myfav-craft-import-article-selector-table">
+                            <thead>
+                                <tr>
+                                    <th class="myfav-craft-import-article-col-override-title"><span class="myfav-cut-title" title="Überschreiben">Überschreiben</span></th>
+                                    <th>Eigenschaft</th>
+                                    <th>Neuer Wert</th>
+                                    <th>Custom-Import Wert</th>
+                                    <th>Übergeben von Craft</th>
+                                </tr>
+                            </thead>
 
-                            <table class="myfav-craft-import-article-selector-table">
-                                <thead>
-                                    <tr>
-                                        <th class="myfav-craft-import-article-col-override-title"><span class="myfav-cut-title" title="Überschreiben">Überschreiben</span></th>
-                                        <th>Eigenschaft</th>
-                                        <th>Neuer Wert</th>
-                                        <th>Übergeben von Craft</th>
-                                    </tr>
-                                </thead>
-
+                            <tbody>
                                 {# Artikelnummer #}
                                 <tr>
                                     <td class="myfav-craft-import-article-col-override">
@@ -140,6 +104,7 @@
                                             :disabled="!shopwareProductSettings.updateProductNumber"
                                             v-model="shopwareProductSettings.customProductNumber"
                                             @change="updateProductNumber"
+                                            :error="customProductNumberErrorMessage"
                                         ></sw-text-field>
                                         <span
                                             class="myfav-craft-import-take-over-price myfav-craft-import-active-action-link"
@@ -147,7 +112,10 @@
                                         <span v-if="shopwareProductSettings.productNumberLength > maxProductNumberLength" class="myfav-craft-import-product-number-length-info">Achtung! Die Artikelnummer wird automatisch auf 60 Zeichen gekürzt. Sie verwenden aktuell mehr als 60 Zeichen.</span>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        {{ selectedSearchResult.productNumber }}
+                                        {{ myfavCraftImportArticle.customData.customProductNumber }}
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        {{ myfavCraftImportArticle.craftData.productNumber }}
                                     </td>
                                 </tr>
 
@@ -167,7 +135,10 @@
                                         ></sw-text-field>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        {{ selectedSearchResult.productName }}
+                                        {{ myfavCraftImportArticle.customData.customProductName }}
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        {{ myfavCraftImportArticle.craftData.productName }}
                                     </td>
                                 </tr>
 
@@ -188,7 +159,10 @@
                                         ></sw-textarea-field>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        {{ selectedSearchResult.productText }}
+                                        {{ myfavCraftImportArticle.customData.customProductText }}
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        {{ myfavCraftImportArticle.craftData.productText }}
                                     </td>
                                 </tr>
 
@@ -207,6 +181,13 @@
                                             entity="tax"
                                             v-model="shopwareProductSettings.customTaxId"
                                             @change="selectTaxRate"
+                                        ></sw-entity-single-select>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <sw-entity-single-select
+                                            :disabled="true"
+                                            entity="tax"
+                                            v-model="myfavCraftImportArticle.customData.customTaxId"
                                         ></sw-entity-single-select>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">&nbsp;</td>
@@ -252,7 +233,34 @@
                                             @click="updateVariantArticlePrices()">Einstellung für alle Varianten übernehmen</span>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        {{ selectedSearchResult.retailPrice.price }}
+                                        {{ myfavCraftImportArticle.customData.customProductText }}
+
+                                        <sw-switch-field
+                                            :disabled="true"
+                                            label="Prozentuale Preisberechnung verwenden"
+                                            :value="myfavCraftImportArticle.customData.usePercentualDiscount"
+                                        ></sw-switch-field>
+                                        <sw-text-field
+                                            :disabled="true"
+                                            label="Nachlass in Prozent | Preisberechnung: CraftPreis - (CraftPreis / 100 * Prozent)"
+                                            v-model="myfavCraftImportArticle.customData.discountInPercent"
+                                            v-if="myfavCraftImportArticle.customData.usePercentualDiscount === true"
+                                        ></sw-text-field>
+                                        <sw-text-field
+                                            :disabled="true"
+                                            label="Aktuell berechneter Preis"
+                                            v-model="myfavCraftImportArticle.customData.currentCalculatedProcentualPrice"
+                                            v-if="myfavCraftImportArticle.customData.usePercentualDiscount === true"
+                                        ></sw-text-field>
+                                        <sw-text-field
+                                            :disabled="true"
+                                            label="Brutto Preis"
+                                            v-model="myfavCraftImportArticle.customData.customProductPriceGros"
+                                            v-if="myfavCraftImportArticle.customData.usePercentualDiscount === false"
+                                        ></sw-text-field>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        {{ myfavCraftImportArticle.craftData.retailPrice.price }}
                                     </td>
                                 </tr>
 
@@ -274,8 +282,16 @@
                                         ></sw-category-tree-field>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        <ul v-if="selectedSearchResult.productCategory.length > 0" class="myfav-craft-ul-li-list">
-                                            <li v-for="craftCategory in selectedSearchResult.productCategory">{{ craftCategory.value }}</li>
+                                        <sw-category-tree-field
+                                            :categories-collection="myfavCraftImportArticleCategoryCollection"
+                                            :criteria="categoryCriteria"
+                                            :disabled="true"
+                                            placeholder=""
+                                        ></sw-category-tree-field>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <ul v-if="myfavCraftImportArticle.craftData.productCategory.length > 0" class="myfav-craft-ul-li-list">
+                                            <li v-for="craftCategory in myfavCraftImportArticle.craftData.productCategory">{{ craftCategory.value }}</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -303,7 +319,15 @@
                                         </div>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        {{ selectedSearchResult.productFabrics }}
+                                        <span v-if="myfavCraftImportArticle.customData.updateProductCustomFieldForFabrics !== false">
+                                            {{ myfavCraftImportArticle.customData.customProductCustomFieldForFabrics }}
+                                        </span>
+                                        <span v-else>
+                                            &nbsp;
+                                        </span>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        {{ myfavCraftImportArticle.craftData.productFabrics }}
                                     </td>
                                 </tr>
 
@@ -331,8 +355,16 @@
                                         </div>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        <ul v-if="selectedSearchResult.productFeature != null && selectedSearchResult.productFeature.length > 0" class="myfav-craft-ul-li-list">
-                                            <li v-for="productFeature in selectedSearchResult.productFeature">{{ productFeature.value }}</li>
+                                        <span v-if="myfavCraftImportArticle.customData.updateProductFeatures !== false">
+                                            {{ myfavCraftImportArticle.customData.customProductFeatures }}
+                                        </span>
+                                        <span v-else>
+                                            &nbsp;
+                                        </span>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <ul v-if="myfavCraftImportArticle.craftData.productFeature != null && myfavCraftImportArticle.craftData.productFeature.length > 0" class="myfav-craft-ul-li-list">
+                                            <li v-for="productFeature in myfavCraftImportArticle.craftData.productFeature">{{ productFeature.value }}</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -358,8 +390,16 @@
                                         </div>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        <ul v-if="selectedSearchResult.productFit != null && selectedSearchResult.productFit.length > 0" class="myfav-craft-ul-li-list">
-                                            <li v-for="productFit in selectedSearchResult.productFit">{{ productFit.value }}</li>
+                                        <span v-if="myfavCraftImportArticle.customData.updateProductFit !== false">
+                                            {{ myfavCraftImportArticle.customData.customProductFit }}
+                                        </span>
+                                        <span v-else>
+                                            &nbsp;
+                                        </span>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <ul v-if="myfavCraftImportArticle.craftData.productFit != null && myfavCraftImportArticle.craftData.productFit.length > 0" class="myfav-craft-ul-li-list">
+                                            <li v-for="productFit in selectemyfavCraftImportArticle.craftDatadSearchResult.productFit">{{ productFit.value }}</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -385,8 +425,16 @@
                                         </div>
                                     </td>
                                     <td class="myfav-craft-import-article-col-original-value">
-                                        <ul v-if="selectedSearchResult.productGender != null && selectedSearchResult.productGender.length > 0" class="myfav-craft-ul-li-list">
-                                            <li v-for="productGender in selectedSearchResult.productGender">{{ productGender.value }}</li>
+                                        <span v-if="myfavCraftImportArticle.customData.updateProductGender !== false">
+                                            {{ myfavCraftImportArticle.customData.customProductGender }}
+                                        </span>
+                                        <span v-else>
+                                            &nbsp;
+                                        </span>
+                                    </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <ul v-if="myfavCraftImportArticle.craftData.productGender != null && myfavCraftImportArticle.craftData.productGender.length > 0" class="myfav-craft-ul-li-list">
+                                            <li v-for="productGender in myfavCraftImportArticle.craftData.productGender">{{ productGender.value }}</li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -408,8 +456,15 @@
                                             @change="selectProductBrandId"
                                         ></sw-entity-single-select>
                                     </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <sw-entity-single-select
+                                            :disabled="true"
+                                            entity="product_manufacturer"
+                                            v-model="myfavCraftImportArticle.customData.customProductBrandId"
+                                        ></sw-entity-single-select>
+                                    </td>
                                     <td>
-                                        {{ selectedSearchResult.productBrand }}
+                                        {{ myfavCraftImportArticle.craftData.productBrand }}
                                     </td>
                                 </tr>
 
@@ -424,135 +479,111 @@
                                             @change="selectConfiguration"
                                         ></sw-entity-single-select>
                                     </td>
+                                    <td class="myfav-craft-import-article-col-original-value">
+                                        <sw-entity-single-select
+                                            entity="neonconfigurator_configuration"
+                                            :disabled="true"
+                                            v-model="myfavCraftImportArticle.customData.configurationId"
+                                        ></sw-entity-single-select>
+                                    </td>
                                     <td class="myfav-craft-import-article-col-original-value">&nbsp;</td>
                                 </tr>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <div class="myfav-craft-variations">
-                            <div v-for="variation in selectedSearchResult.variations" class="myfav-craft-variation">
-                                <div class="myfav-craft-variation-title">
-                                    {{ variation.itemColorName }}
+                    <div class="myfav-craft-variations">
+                        <div v-for="variation in myfavCraftImportArticle.craftData.variations" class="myfav-craft-variation">
+                            <div class="myfav-craft-variation-title">
+                                {{ variation.itemColorName }}
+                                <sw-switch-field
+                                    @change="activateVariantsSkus(variation, $event)"
+                                ></sw-switch-field> <label>Alle aktivieren</label>
+                            </div>
+                            <div class="myfav-craft-variation-skus">
+                                <div v-for="variationSku in variation.skus" class="myfav-craft-variation-sku">
                                     <sw-switch-field
-                                        @change="activateVariantsSkus(variation, $event)"
-                                    ></sw-switch-field> <label>Alle aktivieren</label>
-                                </div>
-                                <div class="myfav-craft-variation-skus">
-                                    <div v-for="variationSku in variation.skus" class="myfav-craft-variation-sku">
+                                        :value="variationSku.myfavCraftSettings.activated"
+                                        @change="updateVariantActivated(variationSku, $event)"
+                                    ></sw-switch-field>
+                                    <div><b>Craft-Daten:</b></div>
+                                    <div>Name: {{ variationSku.skuSize.webtext }}</div>
+                                    <div>Beschr.:{{ variationSku.description }}</div>
+                                    <div>Farbe: {{ variationSku.skucolor }}</div>
+                                    <div>Preis: {{ variationSku.retailPrice.price }}</div>
+
+                                    <!-- Artikelnummer  für die Variante -->
+                                    <div class="myfav-craft-import-variant-section variantProductNumber">
+                                        <sw-text-field
+                                            label="Artikelnummer"
+                                            v-model="variationSku.myfavCraftSettings.productNumber"
+                                            @change="updateVariantArticleNumber(variationSku, $event)"
+                                            :error="isDuplicateProductNumber(variationSku.myfavCraftSettings.productNumber)"
+                                        ></sw-text-field>
+                                    </div>
+
+                                    <!-- Lagerbestand -->
+                                    <div class="myfav-craft-import-variant-section variantStock">
+                                        Wenn ein eigener Lagerbestand verwendet wird, werden Bestandsänderungen von Craft ignoriert.
                                         <sw-switch-field
-                                            :value="variationSku.myfavCraftSettings.activated"
-                                            @change="updateVariantActivated(variationSku, $event)"
+                                            @change="updateVariantUseCustomStock(variationSku, $event)"
+                                            label="Eigenen Lagerbestand verwenden"
+                                            :value="variationSku.myfavCraftSettings.useCustomStock"
                                         ></sw-switch-field>
-                                        <div><b>Craft-Daten:</b></div>
-                                        <div>Name: {{ variationSku.skuSize.webtext }}</div>
-                                        <div>Beschr.:{{ variationSku.description }}</div>
-                                        <div>Farbe: {{ variationSku.skucolor }}</div>
-                                        <div>Preis: {{ variationSku.retailPrice.price }}</div>
+                                        <sw-switch-field
+                                            @change="updateUpdateCustomStockNowForVariant(variationSku, $event)"
+                                            label="Eigenen Lagerbestand jetzt aktualisieren"
+                                            :value="variationSku.myfavCraftSettings.updateCustomStockNow"
+                                            v-if="variationSku.myfavCraftSettings.useCustomStock === true"
+                                        ></sw-switch-field>
+                                        <sw-text-field
+                                            @change="updateCustomStockValue(variationSku, $event)"
+                                            label="Eigener Lagerbestand"
+                                            v-model="variationSku.myfavCraftSettings.customStockValue"
+                                            v-if="variationSku.myfavCraftSettings.useCustomStock === true"
+                                        ></sw-text-field>
+                                    </div>
 
-                                        <!-- Artikelnummer  für die Variante -->
-                                        <div class="myfav-craft-import-variant-section variantProductNumber">
-                                            <sw-text-field
-                                                label="Artikelnummer"
-                                                v-model="variationSku.myfavCraftSettings.productNumber"
-                                                @change="updateVariantArticleNumber(variationSku, $event)"
-                                            ></sw-text-field>
-                                        </div>
-
-                                        <!-- Lagerbestand -->
-                                        <div class="myfav-craft-import-variant-section variantStock">
-                                            Wenn ein eigener Lagerbestand verwendet wird, werden Bestandsänderungen von Craft ignoriert.
-                                            <sw-switch-field
-                                                @change="updateVariantUseCustomStock(variationSku, $event)"
-                                                label="Eigenen Lagerbestand verwenden"
-                                                :value="variationSku.myfavCraftSettings.useCustomStock"
-                                            ></sw-switch-field>
-                                            <sw-switch-field
-                                                @change="updateUpdateCustomStockNowForVariant(variationSku, $event)"
-                                                label="Eigenen Lagerbestand jetzt aktualisieren"
-                                                :value="variationSku.myfavCraftSettings.updateCustomStockNow"
-                                                v-if="variationSku.myfavCraftSettings.useCustomStock === true"
-                                            ></sw-switch-field>
-                                            <sw-text-field
-                                                @change="updateCustomStockValue(variationSku, $event)"
-                                                label="Eigener Lagerbestand"
-                                                v-model="variationSku.myfavCraftSettings.customStockValue"
-                                                v-if="variationSku.myfavCraftSettings.useCustomStock === true"
-                                            ></sw-text-field>
-                                        </div>
-
-                                        <!-- Varianten  Preis -->
-                                        <div class="myfav-craft-import-variant-section variantPrice">
-                                            <sw-switch-field
-                                                @change="updateVariantUseCustomPrice(variationSku, $event)"
-                                                label="Eigenen Preis verwenden"
-                                                :value="variationSku.myfavCraftSettings.useCustomPrice"
-                                            ></sw-switch-field>
-                                            <sw-switch-field
-                                                @change="updateUsePercentualDiscountForVariant(variationSku, $event)"
-                                                :disabled="!variationSku.myfavCraftSettings.useCustomPrice"
-                                                label="Prozentuale Preisberechnung verwenden"
-                                                :value="variationSku.myfavCraftSettings.usePercentualDiscount"
-                                            ></sw-switch-field>
-                                            <sw-text-field
-                                                @change="onChangedVariantProcentualDiscount(variationSku, $event)"
-                                                :disabled="!variationSku.myfavCraftSettings.useCustomPrice"
-                                                label="Nachlass in Prozent | Preisberechnung: CraftPreis - (CraftPreis / 100 * Prozent)"
-                                                v-model="variationSku.myfavCraftSettings.discountInPercent"
-                                                v-if="variationSku.myfavCraftSettings.usePercentualDiscount === true"
-                                            ></sw-text-field>
-                                            <sw-text-field
-                                                :disabled="true"
-                                                label="Aktuell berechneter Preis"
-                                                v-model="variationSku.myfavCraftSettings.currentCalculatedProcentualPrice"
-                                                v-if="variationSku.myfavCraftSettings.usePercentualDiscount === true"
-                                            ></sw-text-field>
-                                            <sw-text-field
-                                                @change="updateVariantArticlePrice(variationSku, $event)"
-                                                :disabled="!variationSku.myfavCraftSettings.useCustomPrice"
-                                                label="Brutto Preis"
-                                                v-model="variationSku.myfavCraftSettings.priceGros"
-                                                v-if="variationSku.myfavCraftSettings.usePercentualDiscount === false"
-                                            ></sw-text-field>
-                                        </div>
+                                    <!-- Varianten  Preis -->
+                                    <div class="myfav-craft-import-variant-section variantPrice">
+                                        <sw-switch-field
+                                            @change="updateVariantUseCustomPrice(variationSku, $event)"
+                                            label="Eigenen Preis verwenden"
+                                            :value="variationSku.myfavCraftSettings.useCustomPrice"
+                                        ></sw-switch-field>
+                                        <sw-switch-field
+                                            @change="updateUsePercentualDiscountForVariant(variationSku, $event)"
+                                            :disabled="!variationSku.myfavCraftSettings.useCustomPrice"
+                                            label="Prozentuale Preisberechnung verwenden"
+                                            :value="variationSku.myfavCraftSettings.usePercentualDiscount"
+                                        ></sw-switch-field>
+                                        <sw-text-field
+                                            @change="onChangedVariantProcentualDiscount(variationSku, $event)"
+                                            :disabled="!variationSku.myfavCraftSettings.useCustomPrice"
+                                            label="Nachlass in Prozent | Preisberechnung: CraftPreis - (CraftPreis / 100 * Prozent)"
+                                            v-model="variationSku.myfavCraftSettings.discountInPercent"
+                                            v-if="variationSku.myfavCraftSettings.usePercentualDiscount === true"
+                                        ></sw-text-field>
+                                        <sw-text-field
+                                            :disabled="true"
+                                            label="Aktuell berechneter Preis"
+                                            v-model="variationSku.myfavCraftSettings.currentCalculatedProcentualPrice"
+                                            v-if="variationSku.myfavCraftSettings.usePercentualDiscount === true"
+                                        ></sw-text-field>
+                                        <sw-text-field
+                                            @change="updateVariantArticlePrice(variationSku, $event)"
+                                            :disabled="!variationSku.myfavCraftSettings.useCustomPrice"
+                                            label="Brutto Preis"
+                                            v-model="variationSku.myfavCraftSettings.priceGros"
+                                            v-if="variationSku.myfavCraftSettings.usePercentualDiscount === false"
+                                        ></sw-text-field>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <template #modal-footer>
-                    <sw-button
-                        @click="onCloseArticleDetailModal"
-                        :disabled="isSavingArticle"
-                        size="large">
-                        Popup schließen
-                    </sw-button>
-
-                    <sw-button
-                        @click="saveProduct(false)"
-                        :disabled="isSavingArticle"
-                        size="large">
-                        Speichern
-                    </sw-button>
-
-                    <sw-button
-                        @click="saveProduct(true)"
-                        :disabled="isSavingArticle"
-                        size="large"
-                        variant="primary">
-                        Speichern &amp; Synchronisieren
-                    </sw-button>
-
-                    <sw-button
-                        @click="finishArticleSavingProcess()"
-                        v-if="savedSuccessfully"
-                        size="large"
-                        variant="primary">
-                        Speichern Erfolgreich (Nachricht schließen)
-                    </sw-button>
-                </template>
-            </sw-modal>
+            </sw-card>
         </template>
     </sw-page>
 {% endblock %}

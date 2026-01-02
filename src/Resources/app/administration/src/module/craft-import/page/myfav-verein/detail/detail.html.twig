@@ -1,0 +1,73 @@
+<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+{% block myfav_craft_verein_detail %}
+<sw-page class="myfav-craft-verein-detail">
+    <template #smart-bar-header>
+        <h2>{{ placeholder(myfavVerein, 'name', $tc('myfav-craft-verein.page.detail.title')) }}</h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <sw-button
+            :disabled="myfavVereinIsLoading"
+            @click="onCancel"
+        >
+            {{ $tc('myfav-craft-verein.page.detail.buttonCancel') }}
+        </sw-button>
+
+        <sw-button-process
+            v-model="isSaveSuccessful"
+            class="myfav-craft-verein__save-action"
+            :is-loading="isLoading"
+            variant="primary"
+            @click.prevent="onSave"
+        >
+            {{ $tc('myfav-craft-verein.page.detail.buttonSave') }}
+        </sw-button-process>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <template v-if="myfavVereinIsLoading">
+                <sw-skeleton variant="detail-bold" />
+                <sw-skeleton />
+            </template>
+
+            <template v-else>
+                <sw-card
+                    position-identifier="myfav-craft-verein-detail-basic-info"
+                    :title="$tc('myfav-craft-verein.page.detail.cardTitle')"
+                >
+                    <sw-container
+                        class="myfav-craft-verein-detail__container"
+                        columns="repeat(auto-fit, minmax(250px, 1fr))"
+                        gap="0 30px"
+                    >
+                        <div class="myfav-craft-verein-detail__base-info-wrapper">
+                            <sw-text-field
+                                v-model:value="myfavVerein.name"
+                                :label="$tc('myfav-craft-verein.page.detail.labelName')"
+                                name="name"
+                                validation="required"
+                                required
+                            />
+
+                            <sw-text-field
+                                v-model:value="myfavVerein.productNumberToken"
+                                :label="$tc('myfav-craft-verein.page.detail.labelProductNumberToken')"
+                                name="productNumberToken"
+                                validation="required"
+                                required
+                            />
+
+                            <sw-category-tree-field
+                                :categories-collection="categoryCollection"
+                                :criteria="categoryCriteria"
+                                placeholder=""
+                            ></sw-category-tree-field>
+                        </div>
+                    </sw-container>
+                </sw-card>
+            </template>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

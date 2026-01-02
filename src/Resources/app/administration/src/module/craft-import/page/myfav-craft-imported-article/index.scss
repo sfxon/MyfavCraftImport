@@ -264,3 +264,15 @@
         font-weight: normal;
     }
 }
+
+.myfav-craft-import-search-result-container {
+    .sw-data-grid.sw-data-grid--full-page {
+        position: relative;
+    }
+
+    .sw-data-grid__cell--craftProductNumber {
+        a {
+            color: #189eff;
+        }
+    }
+}

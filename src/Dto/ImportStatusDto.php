@@ -3,8 +3,19 @@
 namespace Myfav\CraftImport\Dto;
 
 class ImportStatusDto {
+    private array $data = [];
     private bool $hasError = false;
     private array $errorMessages = [];
+
+    // data
+    public function addData(string $index, mixed $data) {
+        $this->data[$index] = $data;
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
 
     // hasError
     public function hasErrors(): bool

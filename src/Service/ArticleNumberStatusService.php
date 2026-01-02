@@ -71,6 +71,65 @@ class ArticleNumberStatusService
     }
 
     /**
+     * Checks an array of productNumbers for duplicates.
+     * Returns importStatusDto object with the duplicates it found.
+     * This is a very simple, and just checks, if a product number is already existing in the database.
+     */
+    public function checkProductNumberArrayForDuplicates($context, $productNumbers) {
+        $query = 'SELECT HEX(id) as id, product_number ';
+        $query .= 'FROM product WHERE ' . "\n";
+        $inputVariables = [];
+        $inputVariableCount = 1;
+
+        foreach($productNumbers as $productNumber) {
+            if($inputVariableCount > 1) {
+                $query .= ' OR ' . "\n";
+            }
+
+            $query .= '(product_number = :productNumber' . $inputVariableCount . ')';
+            $inputVariables['productNumber' . $inputVariableCount] = $productNumber;
+            $inputVariableCount += 1;
+        }
+
+        $stmt = $this->connection->executeQuery(
+            $query,
+            $inputVariables,
+        );
+
+        $duplicateProductNumbers = [];
+
+        foreach ($stmt->iterateAssociative() as $row) {
+            $duplicateProductNumbers[] = [
+                'productId' => $row['id'],
+                'productNumber' => $row['product_number']
+            ];
+        }
+
+        $importStatusDto = new ImportStatusDto();
+
+        if(count($duplicateProductNumbers) == 0) {
+            $importStatusDto->setErrorState(false);
+        } else {
+            $importStatusDto->setErrorState(true);
+
+            $duplicateProductNumbersString = '';
+
+            foreach($duplicateProductNumbers as $duplicateProductNumber) {
+                if(strlen($duplicateProductNumbersString) > 0) {
+                    $duplicateProductNumbersString .= ', ';
+                }
+
+                $duplicateProductNumbersString .= $duplicateProductNumber['productNumber'];
+            }
+
+            $importStatusDto->addErrorMessage('Die Artikelnummern der folgenden Varianten sind bereits Artikeln  zugeordnet: ' . $duplicateProductNumbersString);
+            $importStatusDto->addData('invalidProductNumbersData', $duplicateProductNumbers);
+        }
+
+        return $importStatusDto;
+    }
+
+    /**
      * checkVariantArticleNumbersStati
      *
      * @param  Context $context

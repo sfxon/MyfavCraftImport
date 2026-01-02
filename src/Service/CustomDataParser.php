@@ -182,7 +182,8 @@ class CustomDataParser
         // packUnit | ignored.
         // packUnitPlural | ignored.
         // customFields'] = new ImportField($this->container, $craftData, null, 'CraftCustomFieldsImportService');
-        CustomImportFieldProcessor::updateField(
+        
+        CustomImportFieldProcessor::mergeUpdateArrayField(
             $context,
             $fields, // Fields that have already been populated with import data from the original data source.
             'customFields', // Fieldname, that should be updated.

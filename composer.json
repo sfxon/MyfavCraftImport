@@ -1,6 +1,6 @@
 {
     "name": "myfav/craft-import",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Importer, to handle imports from the CRAFT API. Craft is a sportswear manufacturer.",
     "type": "shopware-platform-plugin",
     "license": "MIT",

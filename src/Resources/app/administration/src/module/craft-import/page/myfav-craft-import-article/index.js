@@ -529,6 +529,25 @@ Component.register('myfav-craft-import-article', {
             }
         },
 
+        activateVariantsSkus(clickedVariation, activated) {
+            for(let i = 0, j = this.selectedSearchResult.variations.length; i < j; i++) {
+                let variation = this.selectedSearchResult.variations[i];
+
+                for(let k = 0, l = variation.skus.length; k < l; k++) {
+                    let skuData = variation.skus[k];
+
+                    for(let x = 0, y = clickedVariation.skus.length; x < y; x++) {
+                        let cvSku = clickedVariation.skus[x];
+
+                        if(cvSku.sku === skuData.sku) {
+                            skuData.myfavCraftSettings.activated = activated;
+                            this.$set(variation.skus, k, skuData);
+                        }
+                    }
+                }
+            }
+        },
+
         updateVariantArticleNumber(variationSku, newProductNumber) {
             for(let i = 0, j = this.selectedSearchResult.variations.length; i < j; i++) {
                 let variation = this.selectedSearchResult.variations[i];

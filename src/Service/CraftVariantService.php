@@ -61,6 +61,11 @@ class CraftVariantService
         $variantActiveField->processCraftImportService($context, $this->container, $sku);
         $fields['active'] = $variantActiveField->getValue();
 
+        // isCloseout (hier immer true, im Hauptartikel immer false)
+        $closeoutField = new ImportField(null, 'CloseoutImportService');
+        $closeoutField->processCraftImportService($context, $this->container, $sku);
+        $fields['isCloseout'] = $closeoutField->getValue();
+
         // stock - availabilityGlobal
         $stockField = (new ImportField(['availabilityGlobal'], 'VariantStockImportService'));
         $stockField->processCraftImportService($context, $this->container, $sku);

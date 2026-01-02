@@ -20,7 +20,16 @@
                                     </th>
                                     <td class="sw-data-grid__cell sw-data-grid__cell--name sw-data-grid__cell--align-left">
                                         <div class="sw-data-grid__cell-content">
-                                            xxxx
+                                            <span style="margin-right: 24px;">
+                                                {{ myfavCraftImportArticleCount }} importertierte Artikel
+                                            </span>
+
+                                            <sw-button
+                                                size="x-small"
+                                                :routerLink="{ name: 'myfav.craft.import.importedArticle' }"
+                                            >
+                                                Importierte Artikel bearbeiten
+                                            </sw-button>
                                         </div>
                                     </td>
                                 </tr>

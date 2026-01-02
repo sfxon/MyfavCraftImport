@@ -1,0 +1,58 @@
+{% block myfav_craft_import_article %}
+    <sw-page class="myfav-craft-import-article myfav-craft-import-select-verein">
+        <template #content>
+            <sw-card class="myfav-craft-import-main-card" positionIdentifier="myfavCraftImportArticleSearchResult">
+                <div v-if="myfavCraftImportArticle == null">
+                    Loading..
+                </div>
+                <div v-else>
+                    <h1>
+                        Vereins-Zuweisung für Artikel 
+                    </h1>
+                    <ul style="padding-left: 24px">
+                        <li>Custom-Artikel-Name: <b>{{ myfavCraftImportArticle.customData.customProductName }}</b></li>
+                        <li>Custom-Artikel-Nummer: <b>{{ myfavCraftImportArticle.customData.customProductNumber }}</b></li>
+                        <li>Craft-Artikel-Name: {{ myfavCraftImportArticle.craftData.productName }}</li>
+                        <li>Craft-Artikel-Nummer: {{ myfavCraftImportArticle.craftData.productNumber }}</li>
+                    </ul>
+                    <div class="myfav-craft-import-search-result-container">
+                        <sw-entity-listing
+                            v-if="vereine"
+                            :items="vereine"
+                            :repository="myfavCraftImportArticleRepository"
+                            :columns="vereineColumns"
+                            :is-loading="isLoading"
+                            :criteria="criteria"
+                            :show-actions="false"
+                            :show-selection="false"
+                            :show-settings="false"
+                            :allow-delete="false"
+                            @paginate="onPaginate"
+                        >
+                            <template #column-id="{ item }">
+                                <span v-if="isProductAssignedToVerein(item.id) === null">Lade Daten...</span>
+                                <span v-else-if="isProductAssignedToVerein(item.id) === false" style="color: red;">Nicht zu Verein zugewiesen</span>
+                                <span v-else style="color: #46A600;">Zugewiesen</span>
+                            </template>
+
+                            <template #column-createdAt="{ item }">
+                                <span v-if="isProductAssignedToVerein(item.id) === null">Lade Daten...</span>
+                                <router-link 
+                                    v-else-if="isProductAssignedToVerein(item.id) === false"
+                                    v-bind:to="{ name: 'myfav.craft.import.assignVerein', params: { myfavCraftImportArticleId: myfavCraftImportArticleId, myfavVereinId: item.id } }"
+                                    ref="routerLink"
+                                    class="sw-search-bar-item__link"
+                                >
+                                    Artikel zu Verein hinzufügen
+                                </router-link>
+                                <span v-else style="color: #46A600">Bereits zugewiesen</span>
+
+                            </template>
+
+                        </sw-entity-listing>
+                    </div>
+                </div>
+            </sw-card>
+        </template>
+    </sw-page>
+{% endblock %}

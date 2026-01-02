@@ -1,0 +1,55 @@
+<sw-page class="myfavVerein__list">
+    <template #smart-bar-header>
+        <h2>
+            {{ $tc('myfav-craft-verein.page.list.title') }}
+        </h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <sw-button variant="primary" :routerLink="{ name: 'myfav.craft.verein.create' }">
+            {{ $tc('myfav-craft-verein.page.list.buttonNew') }}
+        </sw-button>
+    </template>
+
+    <template #content>
+        <div class="myfav-craft-verein-list">
+            <sw-data-grid
+                :data-source="myfavVereine"
+                :columns="myfavVereineColumns"
+                :full-page="true"
+                :show-settings="true"
+                :show-selection="false"
+                :sort-by="sortBy"
+                :sort-direction="sortDirection"
+                :is-loading="isLoading"
+                identifier="myfav-craft-verein-list"
+                :disable-data-fetching="true"
+                :maximum-select-items="100"
+                @column-sort="onSortColumn"
+                @page-change="onPageChange"
+            >
+                <template #actions="{ item }">
+                    <sw-context-menu-item
+                        class="sw-order-list__order-view-action"
+                        :router-link="{ name: 'myfav.craft.verein.detail', params: { myfavCraftVereinId: item.id } }"
+                    >Bearbeiten</sw-context-menu-item>
+                    <sw-context-menu-item
+                        class="sw-entity-listing__context-menu-edit-delete"
+                        variant="danger"
+                        @click="deleteVerein(item.id)"
+                    >Entfernen</sw-context-menu-item>
+                </template>
+
+                <template #pagination>
+                    <sw-pagination
+                        :page="page"
+                        :limit="limit"
+                        :total="total"
+                        :total-visible="10"
+                        @page-change="onPageChange"
+                    />
+                </template>
+            </sw-data-grid>
+        </div>
+    </template>
+</sw-page>

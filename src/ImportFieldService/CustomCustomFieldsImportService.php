@@ -34,25 +34,23 @@ class CustomCustomFieldsImportService
             $productCustomFieldForFabrics = $pluginConfig['productCustomFieldForFabrics'];
         }
 
-        if(null === $productCustomFieldForFabrics) {
-            return null;
+        if(null !== $productCustomFieldForFabrics &&
+            isset($importData['updateProductCustomFieldForFabrics']) ||
+            $importData['updateProductCustomFieldForFabrics'] === true ||
+            isset($importData['customProductCustomFieldForFabrics'])) {
+
+            $fabrics = $importData['customProductCustomFieldForFabrics'];
+            $fabrics = trim($fabrics);
+
+            if(strlen($fabrics) > 0) {
+                $customFields[$productCustomFieldForFabrics] = $fabrics;
+            }
         }
 
-        if(
-            !isset($importData['updateProductCustomFieldForFabrics']) ||
-            $importData['updateProductCustomFieldForFabrics'] !== true ||
-             !isset($importData['customProductCustomFieldForFabrics'])) {
-            return null;
+        // Add Neonlines Configurator Selection.
+        if(isset($importData['configurationId']) && strlen($importData['configurationId']) > 0) {
+            $customFields['neon_configurator_products_config'] = $importData['configurationId'];
         }
-
-        $fabrics = $importData['customProductCustomFieldForFabrics'];
-        $fabrics = trim($fabrics);
-
-        if(strlen($fabrics) === 0) {
-            return null;
-        }
-
-        $customFields[$productCustomFieldForFabrics] = $fabrics;
 
         return $customFields;
     }

@@ -1,21 +1,38 @@
 {
     "myfav-craft-import": {
         "article": {
-            "btnSave": "Save",
+            "btnSave": "Speichern",
             "buttonSelect": "Auswählen",
-            "infoStartNewSearch": "Start by searching for an article-number.",
-            "inputTextSearchTerm": "Search by Article-Number or Name",
-            "btnSearchForArticle": "Search",
-            "pageTitle": "Product"
+            "infoStartNewSearch": "Starte, indem du nach einer Artikelnummer oder einem Artikel-Namen suchst.",
+            "inputTextSearchTerm": "Suche nach Artikel-Nr. oder Bezeichnung",
+            "btnSearchForArticle": "Suchen",
+            "pageTitle": "Artikel"
         },
         "dashboard": {
-            "buttonAddProducts": "Add products",
+            "buttonAddProducts": "Artikel hinzufügen",
             "pageTitle": "Craft-Import",
-            "tableHeadingActiveProductsInShop": "Active products in shop:",
+            "tableHeadingActiveProductsInShop": "Aktive Artikel im Shop:",
             "tableHeadingLastSynchronization": "Letzte Synchronisierung:"
         },
         "general": {
             "mainMenuItemGeneral": "Craft-Import"
+        }
+    },
+    "myfav-craft-verein": {
+        "page": {
+            "detail": {
+                "buttonCancel": "Abbrechen",
+                "buttonSave": "Speichern",
+                "cardTitle": "Allgemeine Informationen",
+                "labelName": "Name",
+                "labelProductNumberToken": "Artikel-Nummer-Token",
+                "title": "Verein erstellen/bearbeiten:"
+            },
+            "list": {
+                "buttonNew": "Neuen Verein anlegen",
+                "menuTitle": "Vereine",
+                "title": "Vereine"
+            }
         }
     }
 }

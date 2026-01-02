@@ -5,6 +5,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- Admin API Controller -->
+        <service id="Myfav\CraftImport\Administration\Controller\CraftImportedArticleSaveApiController" public="true">
+            <argument type="service" id="Myfav\CraftImport\Service\CraftImportedArticleSaveService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
         <service id="Myfav\CraftImport\Administration\Controller\CraftProductImageSaveApiController" public="true">
             <argument type="service" id="Myfav\CraftImport\Service\ProductImageProcessorService"/>
             <call method="setContainer">
@@ -40,6 +47,10 @@
             <tag name="shopware.entity.definition" entity="imported_article" />
         </service>
 
+        <service id="Myfav\CraftImport\Core\Content\ImportedVereinArticle\ImportedVereinArticleDefinition">
+            <tag name="shopware.entity.definition" entity="imported_verein_article" />
+        </service>
+
         <service id="Myfav\CraftImport\Core\Content\MyfavCraftImportArticle\MyfavCraftImportArticleDefinition">
             <tag name="shopware.entity.definition" entity="myfav_craft_import_article" />
         </service>
@@ -48,7 +59,18 @@
             <tag name="shopware.entity.definition" entity="myfav_craft_import_image" />
         </service>
 
+        <service id="Myfav\CraftImport\Core\Content\MyfavVerein\MyfavVereinDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_verein" />
+        </service>
+
+        <service id="Myfav\CraftImport\Core\Content\MyfavVereinArticle\MyfavVereinArticleDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_verein_article" />
+        </service>
+
         <!-- Import Services -->
+        <service id="Myfav\CraftImport\ImportFieldService\CloseoutDisabledImportService" public="true">
+        </service>
+
         <service id="Myfav\CraftImport\ImportFieldService\CloseoutImportService" public="true">
         </service>
 
@@ -156,6 +178,15 @@
             <argument type="service" id="Myfav\CraftImport\Service\ProductService"/>
         </service>
 
+        <service id="Myfav\CraftImport\Service\CraftImportedArticleSaveService">
+            <argument type="service" id="Myfav\CraftImport\Service\ArticleNumberStatusService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\CraftApiResultParser"/>
+            <argument type="service" id="Myfav\CraftImport\Service\CustomDataParser"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ImportVereinArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\MyfavCraftImportArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\MyfavVereinArticleService"/>
+        </service>
+
         <service id="Myfav\CraftImport\Service\CraftProductSaveService">
             <argument type="service" id="Myfav\CraftImport\Service\CraftApiResultParser"/>
             <argument type="service" id="Myfav\CraftImport\Service\ImportArticleService"/>
@@ -173,10 +204,21 @@
             <argument type="service" id="imported_article.repository"/>
         </service>
 
+        <service id="Myfav\CraftImport\Service\ImportedVereinArticleService">
+            <argument type="service" id="imported_verein_article.repository"/>
+        </service>
+
         <service id="Myfav\CraftImport\Service\ImportArticleService">
             <argument type="service" id="Myfav\CraftImport\Service\ArticleNumberStatusService"/>
             <argument type="service" id="Myfav\CraftImport\Service\CraftVariantService"/>
             <argument type="service" id="Myfav\CraftImport\Service\ImportedArticleService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ProductService"/>
+        </service>
+
+        <service id="Myfav\CraftImport\Service\ImportVereinArticleService">
+            <argument type="service" id="Myfav\CraftImport\Service\ArticleNumberStatusService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\CraftVariantService"/>
+            <argument type="service" id="Myfav\CraftImport\Service\ImportedVereinArticleService"/>
             <argument type="service" id="Myfav\CraftImport\Service\ProductService"/>
         </service>
 
@@ -188,6 +230,10 @@
             <argument type="service" id="media.repository"/>
             <argument type="service" id="Shopware\Core\Content\Media\MediaService" />
             <argument type="service" id="Shopware\Core\Content\Media\File\FileSaver" />
+        </service>
+
+        <service id="Myfav\CraftImport\Service\MyfavVereinArticleService">
+            <argument type="service" id="myfav_verein_article.repository"/>
         </service>
 
         <service id="Myfav\CraftImport\Service\ProductImageProcessorService">
@@ -215,6 +261,17 @@
         </service>
 
         <!-- Storefront Controller -->
+        <service id="Myfav\CraftImport\Storefront\Controller\CraftActivateInheritanceController" public="true">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="product_media.repository"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
         <service id="Myfav\CraftImport\Storefront\Controller\CraftApiSimulationController" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <call method="setContainer">
