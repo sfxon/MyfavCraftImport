@@ -18,6 +18,19 @@ class MyfavCraftImportArticleService
     }
 
     /**
+     * loadById
+     *
+     * @param  Context $context
+     * @param  string $id
+     * @return mixed
+     */
+    public function loadById(Context $context, string $id): mixed
+    {
+        $criteria = new Criteria([$id]);
+        return $this->myfavCraftImportArticleRepository->search($criteria, $context)->first();
+    }
+
+    /**
      * getEntryByProductNumber
      *
      * @param  Context $context

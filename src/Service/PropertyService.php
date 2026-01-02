@@ -19,6 +19,20 @@ class PropertyService
     }
 
     /**
+     * getOptionById
+     *
+     * @param  Context $context
+     * @param  string $propertyGroupOptionId
+     * @return PropertyGroupOptionEntity
+     */
+    public function getOptionById(Context $context, string $propertyGroupOptionId): ?PropertyGroupOptionEntity
+    {
+        $criteria = new Criteria([$propertyGroupOptionId]);
+        $option = $this->propertyGroupOptionRepository->search($criteria, $context)->first();
+        return $option;
+    }
+
+    /**
      * getOptionByName
      *
      * @param  Context $context

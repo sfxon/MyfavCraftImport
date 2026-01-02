@@ -189,6 +189,8 @@ class ProductService
 
         $this->productRepository->upsert([$productData], $context);
 
+        $product = $this->getProductByProductNumber($context, $productData['productNumber']);
+
         $this->updateCategories($context, $id, $product, $categories);
         $this->updateProperties($context, $id, $product, $properties);
         $this->updateVisibilities($context, $id, $product, $visibilities);
@@ -268,13 +270,20 @@ class ProductService
 
             foreach($variantOptions as $variantOption) {
                 $variantOptionId = $variantOption->getPropertyGroupOptionId();
+                $propertyGroupOptionData = $this->propertyService->getOptionById($context, $variantOptionId);
+                $position = 0;
+
+                if($propertyGroupOptionData !== null) {
+                    $position = $propertyGroupOptionData->getPosition();
+                }
 
                 if(isset($setOptionIds[$variantOptionId])) {
                     continue;
                 }
                 
                 $optionIds[] = [
-                    'optionId' => $variantOptionId
+                    'optionId' => $variantOptionId,
+                    'position' => $position
                 ];
                 $setOptionIds[$variantOptionId] = true;
             }
@@ -434,17 +443,23 @@ class ProductService
             $propertyData = [];
 
             foreach($properties as $property) {
+                if(is_array($property)) {
+                    continue;
+                }
+                
                 $propertyData[] = [
                     'id' => $property
                 ];
             }
 
-            $this->productRepository->update([
-                [
-                    'id' => $productId,
-                    'properties' => $propertyData
-                ],
-            ], $context);
+            if(count($propertyData) > 0) {
+                $this->productRepository->update([
+                    [
+                        'id' => $productId,
+                        'properties' => $propertyData
+                    ],
+                ], $context);
+            }
         }
     }
 

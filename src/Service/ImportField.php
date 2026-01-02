@@ -9,6 +9,7 @@ class ImportField
 {
     private mixed $additionalData = null;
     private ?array $fieldDataIndex;
+    private mixed $defaultValue;
     private $craftImportProcessorClassName;
     private $customDataProcessorClassName;
     private mixed $value = null;
@@ -16,11 +17,13 @@ class ImportField
     public function __construct(
         ?array $fieldDataIndex,
         string $craftImportProcessorClassName,
-        mixed $additionalData = null)
+        mixed $additionalData = null,
+        mixed $defaultValue = null)
     {
         $this->fieldDataIndex = $fieldDataIndex;
         $this->craftImportProcessorClassName = $craftImportProcessorClassName;
         $this->additionalData = $additionalData;
+        $this->defaultValue = $defaultValue;
     }
 
     /**
@@ -41,7 +44,7 @@ class ImportField
     public function processCraftImportService(Context $context, ContainerInterface $container, mixed $importData): void
     {
         $craftImportProcessorInstance = $container->get('Myfav\\CraftImport\\ImportFieldService\\' . $this->craftImportProcessorClassName);
-        $this->value = $craftImportProcessorInstance->process($context, $importData, $this->fieldDataIndex, $this->additionalData);
+        $this->value = $craftImportProcessorInstance->process($context, $importData, $this->fieldDataIndex, $this->additionalData, $this->defaultValue);
     }
 
     /**
@@ -79,7 +82,7 @@ class ImportField
     }
 
     /**
-     * updateValueByProcessor
+     * mergeArrayValueByProcessor
      *
      * @param  Context $context
      * @param  ContainerInterface $container
@@ -104,6 +107,26 @@ class ImportField
             $indexPathForValue,
             $customDataProcessorClassName
         );
+
+        if($newValue === null && !$newValueCanBeNull) {
+            return;
+        }
+
+        if(!is_array($newValue)) {
+            return;
+        }
+
+        if(count($newValue) == 0) {
+            return;
+        }
+
+        if(!is_array($this->value)) {
+            $this->value = [];
+        }
+
+        foreach($newValue as $index => $value) {
+            $this->value[$index] = $value;
+        }
     }
 
     /**
