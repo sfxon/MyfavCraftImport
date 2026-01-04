@@ -34,10 +34,13 @@ Component.register('myfav-craft-verein-create', {
 
     data() {
         return {
-            myfavVereinIsNew: true,
-            myfavVerein: null,
+            // Erstelle initial eine leere categoryCollection als EntityCollection.
+            // Das ist wichtig, da sonst keine Kategorien in der Kategorie-Auswahl-Liste angezeigt werden.
+            categoryCollection: new Shopware.Data.EntityCollection('collection', 'collection', {}, null, []),
             isLoading: false,
             isSaveSuccessful: false,
+            myfavVerein: null,
+            myfavVereinIsNew: true,
         };
     },
 
@@ -52,8 +55,13 @@ Component.register('myfav-craft-verein-create', {
             return this.placeholder(this.myfavVerein, 'name');
         },
 
-        currentLanguageId() {
-            return Shopware.State.get('context').api.languageId;
+        categoryCriteria() {
+            const criteria = new Criteria(1, 500);
+            return criteria;
+        },
+
+        categoryRepository() {
+            return this.repositoryFactory.create('category');
         },
 
         myfavVereinIsLoading() {

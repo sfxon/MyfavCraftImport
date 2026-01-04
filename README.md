@@ -1,21 +1,51 @@
 # MyfavCraftImport
 
-Projekt-Status: **In development**
+Shopware 6 Importer für die CRAFT Sportswear API. Importiert Artikel über die API in den Shopware 6 Shop.
 
-This project is still in development. Some features are working, while others are not finished or have to be added.
+Projekt-Status: **Unter Entwicklung**
 
-Ready to test features:
+Dieses Projekt befindet sich noch in Entwicklung. Einige Features sind bereits fertig, andere müssen noch fertiggestellt oder hinzugefügt werden.
 
-* In the current state, fetching and inserting articles from craft to the shop is now working.
+Features, die Bereit zum Testen sind:
 
-Missing features:
+* Abrufen von Artikeln über die CRAFT-API und das Hinzufügen derselben als Shop-Artikel.
+* Hinzufügen von Vereinen zum System als eigene Datenstruktur.
+* Artikel, die von Craft heruntergeladen wurden, können Vereinen zugewiesen werden, und erstellen für diese dann neue Artikel.
 
-* Updating products with a CLI-Command and/or a Shopware Worker.
+Fehlende Features:
 
----
+* Artikel über einen Shopware Worker aktualisieren (+ CLI-Befehl).
 
-Shopware 6 Importer for the CRAFT Sportswear API. Imports products from the API to your shopware 6 store.
+## Installation von Updates
 
+Grundsätzlich sollte immer ein Backup angelegt werden, und das Update zunächst in einer Stage Umgebung getestet werden.
+
+Ich gehe dabei in etwa so vor:
+
+```batch
+# 1. Sichern des Original-Ordners für einen schnellen Zugriff
+cd shoproot
+cd /custom/plugins
+mv MyfavCraftImport ./../MyfavCraftImport_org
+
+# 2. Aktuelle Version als Zip-File bereitstellen.
+
+# 3. Zip File entpacken
+unzip MyfavCraftImport_main.zip
+
+# 4. Main-Ordner umbennen, falls notwendig
+mv MyfavCraftImport_main MyfavCraftImport
+
+# 5. Ggf. Berechtigungen korrekt setzen
+sudo chmod -R 700 MyfavCraftImport
+sudo chown -R www-data:www-data MyfavCraftImport
+
+# 6. Plugin updaten
+cd ./../..
+bin/console plugin:update MyfavCraftImport
+bin/console cache:clear
+bin/build-administration.sh
+```
 
 ## Information about Craft / Disclaimer
 

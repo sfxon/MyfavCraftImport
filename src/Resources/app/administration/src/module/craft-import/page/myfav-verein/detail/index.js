@@ -38,9 +38,10 @@ Component.register('myfav-craft-verein-detail', {
             // Erstelle initial eine leere categoryCollection als EntityCollection.
             // Das ist wichtig, da sonst keine Kategorien in der Kategorie-Auswahl-Liste angezeigt werden.
             categoryCollection: new Shopware.Data.EntityCollection('collection', 'collection', {}, null, []),
-            myfavVerein: null,
             isLoading: false,
             isSaveSuccessful: false,
+            myfavVerein: null,
+            myfavVereinIsNew: false,
         };
     },
 
